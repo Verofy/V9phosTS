@@ -10,8 +10,10 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "jetifier": "^2.0.0",
     "react": "17.0.1",
-    "react-native": "0.64.2"
+    "react-native": "0.64.2",
+    "react-native-device-info": "^8.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

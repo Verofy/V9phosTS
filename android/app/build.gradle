@@ -119,8 +119,21 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
 def enableHermes = project.ext.react.get("enableHermes", false);
+task wrapper(type: Wrapper) {
+    gradleVersion = '5.6.4'
+}
+
+//PhosSDK repository
+repositories {
+    maven { url "https://phos.jfrog.io/artifactory/phos-sdk-dependencies"}
+}
+
 
 android {
+    packagingOptions{
+        doNotStrip"*/*/*.so"
+    }
+
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -189,6 +202,12 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    //PhosSDK
+    //debugImplementation files('libs/phos-sdk-mock.aar')
+    debugImplementation files('libs/phos-sdk-staging-release.aar')
+    releaseImplementation files('libs/phos-sdk-staging-release.aar')
+    implementation 'digital.paynetics.phos:sdk-dependencies:1.0.1'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'
