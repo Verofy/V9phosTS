@@ -25,10 +25,7 @@ public class PhosModule extends ReactContextBaseJavaModule{
     public String getName() {
         return "PhosModule";
     }
-    @ReactMethod
-    public String initiate(){
-        return getName();
-    }
+
     void init(ReactContext reactContext, InitCallback callback){
         PhosSdk.getInstance().init(reactContext.getApplicationContext(), new InitCallback() {
             @Override

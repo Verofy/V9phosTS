@@ -3,10 +3,10 @@ import { Text, View, TextInput, Button } from 'react-native';
 import {styles} from '../styles/styles';
 import { processPayment } from '../helpers/appHelpers';
 
-export default function App() {
+export default function HomePage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.h1}>V9phosTS app</Text>
+      <Text style={styles.h1}>V9phos</Text>
       <View
         style={styles.inputContainer}>
         <TextInput
