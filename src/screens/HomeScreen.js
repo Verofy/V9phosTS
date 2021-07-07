@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, TextInput, Button } from 'react-native';
 import {styles} from '../styles/styles';
-import { processPayment } from '../helpers/appHelpers';
+import { processPayment, invokeModule } from '../helpers/appHelpers';
 
 export default function HomePage() {
   return (

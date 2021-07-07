@@ -26,6 +26,11 @@ public class PhosModule extends ReactContextBaseJavaModule{
         return "PhosModule";
     }
 
+    @ReactMethod
+    public Boolean test(){
+        return true;
+    }
+
     void init(ReactContext reactContext, InitCallback callback){
         PhosSdk.getInstance().init(reactContext.getApplicationContext(), new InitCallback() {
             @Override
@@ -72,6 +77,21 @@ public class PhosModule extends ReactContextBaseJavaModule{
         });
     }
     void makeSaleWithAmount(Context context, double Amount, boolean showTransactionResult, Map<String, String> extras, TransactionCallback callback){
+        extras.put("KEY_1", "Value 1");
+        extras.put("KEY_2", "Value 2");
+        PhosSdk.getInstance().makeSaleWithAmount(context, (double) 10, true, extras, new TransactionCallback() {
+            @Override
+            public void onSuccess(String s, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                //Sale successful
+                //data is transaction key
+                //extras is the Map passed in makeSaleWithAmount()
+            }
 
+            @Override
+            public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                //Sale failed
+            }
+        });
     }
+
 };

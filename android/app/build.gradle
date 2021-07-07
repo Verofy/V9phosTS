@@ -204,8 +204,7 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     //PhosSDK
-    //debugImplementation files('libs/phos-sdk-mock.aar')
-    debugImplementation files('libs/phos-sdk-staging-release.aar')
+    debugImplementation files('libs/phos-sdk-mock.aar')
     releaseImplementation files('libs/phos-sdk-staging-release.aar')
     implementation 'digital.paynetics.phos:sdk-dependencies:1.0.1'
 
