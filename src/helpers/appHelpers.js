@@ -6,6 +6,7 @@ export function getConstants() {
 }
 
 export function init(){
+  console.log("create init")
   PhosModule.createInit((err) => {console.log(err)}, (msg) => {console.log(msg)});
 }
 
@@ -21,8 +22,14 @@ export function makeSale(){
   PhosModule.processPayment(true, (err) => {console.log(err)}, (msg) => {console.log(msg)});
 }
 
-export function makeSaleWithAmount(){
-
+export function makeSaleWithAmount(value){
+  var currency="GBP"
+  if (currency=="GBP"){
+    const maxValue=45;
+  };
+  if(value>maxValue){
+    return false;
+  }
 }
 
 export function makeRefund(){
