@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, TextInput, Button } from 'react-native';
 import {styles} from '../styles/styles';
-import { processPayment, invokeModule } from '../helpers/appHelpers';
+import { processPayment, invokeModule, authenticate, makeSale, init } from '../helpers/appHelpers';
 
 export default function HomePage() {
   return (
@@ -18,7 +18,20 @@ export default function HomePage() {
       </View>
         <View style={styles.container}>
           <Button
-            onPress={processPayment}
+            style={styles.debugButton}
+            onPress={init}
+            title="INIT"
+          />
+          <Button
+            style={styles.debugButton}
+            color="lime"
+            onPress={authenticate}
+            title="AUTHENTICATE"
+          />
+          <Button
+            style={styles.debugButton}
+            color="navy"
+            onPress={makeSale}
             title="PAY"
           />
       </View>
