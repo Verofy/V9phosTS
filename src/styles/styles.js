@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   h1:{
-    flex:1,
+    flex:0.2,
     fontSize:50,
     paddingTop:100,
     fontWeight:"bold"
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
   inputContainer:{
     justifyContent:"center",
     alignItems:"center",
-    flex:1,
+    flex:0.5,
     flexDirection:"row",
   },
   boldText:{
