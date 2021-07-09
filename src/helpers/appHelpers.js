@@ -1,49 +1,56 @@
 import PhosModule from "../components/PhosModule";
+import { handleValue } from "./helpers";
 import React from "react";
 
 export function getConstants() { 
   console.log("GET CONSTANTS:",PhosModule.getConstants())
 }
 
-export function init(){
-  console.log("create init")
-  PhosModule.createInit((err) => {console.log(err)}, (msg) => {console.log(msg)});
+export async function promiseTest() {
+  await PhosModule.promiseTest(8)
+  .catch(err=>{console.error(err)})
+  .then(val=>{handleValue(val)})  
+};
+
+export async function init(){
+  await PhosModule.init()
+  .catch(err=>{console.error(err)})
+  .then(val=>{console.info("Module initialiazed "+val)})  
 }
 
-export function authenticate(){
+export async function authenticate(){
   const issuer = "V9";
-  const token = "rrrandomTOKEN";
-  const license = "license" 
-  PhosModule.auth(issuer, token, license, (err) => {console.log(err)}, (msg) => {console.log(msg)});
+  const token = "2ac5040c-2ae7-49b9-a71e-9ace3528d69d";
+  const license = "V9SDK" 
+  await PhosModule.authenticate(issuer, token, license)
+  .catch(err=>{console.error(err)})
+  .then(val=>{console.info("User authenticated as "+val)})
 }
 
-export function makeSale(){
-  const map1 = new Map();
-  PhosModule.processPayment(true, (err) => {console.log(err)}, (msg) => {console.log(msg)});
+export async function makeSale(){
+  await PhosModule.makeSale(true)
+  .catch(err=>{console.error(err)})
+  .then(val=>{console.info(val)})
 }
 
-export function makeSaleWithAmount(value){
-  var currency="GBP"
-  if (currency=="GBP"){
-    const maxValue=45;
-  };
-  if(value>maxValue){
-    return false;
-  }
+export async function makeSaleWithAmount(amount){
+  await PhosModule.makeSaleWithAmount(amount, true)
+  .catch(err=>{console.error(err)})
+  .then(val=>{console.info(val)})
 }
 
-export function makeRefund(){
-
-}
-
-export function makeRefundWithAmount(){
+export async function makeRefund(){
 
 }
 
-export function makeVoid(){
+export async function makeRefundWithAmount(){
 
 }
 
-export function getTransactionHistory(){
+export async function makeVoid(){
+
+}
+
+export async function getTransactionHistory(){
 
 }
