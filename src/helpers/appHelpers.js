@@ -1,5 +1,5 @@
 import PhosModule from "../components/PhosModule";
-import { handleValue } from "./helpers";
+import { handleValue, handleRes } from "./helpers";
 import React from "react";
 const showTransactionResult=true;
 const disablePrompt=true;
@@ -7,72 +7,126 @@ export function getConstants() {
   console.log("GET CONSTANTS:",PhosModule.getConstants())
 }
 
-export async function promiseTest() {
-  await PhosModule.promiseTest(8)
-  .catch(err=>{console.error(err)})
-  .then(val=>{handleValue(val)})  
+export async function promiseTest(v) {
+  return await PhosModule.promiseTest(5)
+  .then(r => {
+    console.log(r);
+  })
+  .catch(err => {
+    console.error(err.mes, err);
+  });
 };
 
 export async function init(){
-  await PhosModule.init()
-  .catch(err=>{console.error(err)})
-  .then(val=>{console.info("Module initialiazed "+val)})  
+  return await PhosModule.init()
+  .then(r => {
+    console.info(r.message);
+    return r;
+  })
+  .catch(err => {
+    console.error(err);
+  });
+  
 }
 
 export async function authenticate(){
   const issuer = "V9";
   const token = "2ac5040c-2ae7-49b9-a71e-9ace3528d69d";
   const license = "V9SDK" 
-  await PhosModule.authenticate(issuer, token, license)
-  .catch(err=>{console.error(err)})
-  .then(val=>{console.info("User authenticated as "+val)})
+  return await PhosModule.authenticate(issuer, token, license)
+  .then(r => {
+    console.info(r.message)
+    return r;
+  })
+  .catch(err => {
+    console.error(err);
+  });
+  
 }
 
 export async function makeSale(){
-  await PhosModule.makeSaleExtras(showTransactionResult)
-  .catch(err=>{console.error(err)})
-  .then(val=>{console.info(val)})
+  return await PhosModule.makeSaleExtras(showTransactionResult)
+  .then(r => {
+    console.info(r.message)
+    return r;
+  })
+  .catch(err => {
+    console.error(err);
+  });
 }
 
 export async function makeSaleWithAmount(amount){
-  await PhosModule.makeSaleWithAmountExtras(amount, showTransactionResult)
-  .catch(err=>{console.error(err)})
-  .then(val=>{console.info(val)})
+  return await PhosModule.makeSaleWithAmountExtras(amount, showTransactionResult)
+  .then(r => {
+    console.info(r.message)
+    return r;
+  })
+  .catch(err => {
+    console.error(err);
+  });
 }
 
 export async function makeRefund(){
   const transaction = "MOCK+TRANSACTION+KEY";
-  await PhosModule.makeRefundExtras(transaction, showTransactionResult, disablePrompt)
-  .catch(err=>{console.error(err)})
-  .then(val=>{console.info(val)})
+  return await PhosModule.makeRefundExtras(transaction, showTransactionResult, disablePrompt)
+  .then(r => {
+    console.info(r.message)
+    return r;
+  })
+  .catch(err => {
+    console.error(err);
+  });
 
 }
 
 export async function makeRefundWithAmount(amount){
   const transaction = "MOCK+TRANSACTION+KEY";
-  await PhosModule.makeRefundWithAmountExtras(transaction, amount, showTransactionResult, disablePrompt)
-  .catch(err=>{console.error(err)})
-  .then(val=>{console.info(val)})
+  return await PhosModule.makeRefundWithAmountExtras(transaction, amount, showTransactionResult, disablePrompt)
+  .then(r => {
+    console.info(r.message)
+    return r;
+  })
+  .catch(err => {
+    console.error(err);
+  });
 }
 
 export async function makeVoid(){
   const transaction = "MOCK+TRANSACTION+KEY";
-  await PhosModule.makeVoidExtras(transaction, showTransactionResult, disablePrompt)
-  .catch(err=>{console.error(err)})
-  .then(val=>{console.info(val)})
+  return await PhosModule.makeVoidExtras(transaction, showTransactionResult, disablePrompt)
+  .then(r => {
+    console.info(r.message)
+    return r;
+  })
+  .catch(err => {
+    console.error(err);
+  });
 }
 
 export async function getTransactionHistory(){
   const page=1;
   const limit=50;
-  await PhosModule.getTransactionHistory(page, limit)
-  .catch(err=>{console.error(err)})
-  .then(val=>{console.info(val)})
+  const date="07/11/2021";
+  const type="sale"; //sale, void, refund
+  const state="successful" //successful, failed, pending, unkwnon
+  return await PhosModule.getTransactionHistory(page, limit, date, type, state)
+  .then(r => {
+    console.info(r.message)
+    return r;
+  })
+  .catch(err => {
+    console.error(err);
+  });
 }
 
 export async function getTransactionByTrKey(){
   const trKey = "MOCK+TRANSACTION+KEY";
-  await PhosModule.getTransactionByTrKey(trKey)
-  .catch(err=>{console.error(err)})
-  .then(val=>{console.info(val)})
+  return await PhosModule.getTransactionByTrKey(trKey)
+  .then(r => {
+    console.info(handleRes(r).transaction)
+    return r;
+  })
+  .catch(err => {
+    console.error(err);
+  });
 }

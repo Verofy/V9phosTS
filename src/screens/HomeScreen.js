@@ -1,9 +1,12 @@
 import React from 'react';
 import { Text, View, TextInput, Button } from 'react-native';
 import {styles} from '../styles/styles';
-import { processPayment, invokeModule, authenticate, makeSale, init, promiseTest, makeRefund, makeRefundWithAmount, makeSaleWithAmount, makeVoid, getTransactionHistory } from '../helpers/appHelpers';
+import { processPayment, invokeModule, authenticate, makeSale, init, promiseTest, makeRefund, makeRefundWithAmount, makeSaleWithAmount, makeVoid, getTransactionHistory, getTransactionByTrKey } from '../helpers/appHelpers';
 
 export default function HomePage() {
+  function testFunc(){
+    console.log(promiseTest(8).then(val=>{console.info(val)}))
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.h1}>V9phos</Text>
@@ -20,7 +23,7 @@ export default function HomePage() {
           <Button
             style={styles.debugButton}
             color="purple"
-            onPress={promiseTest}
+            onPress={testFunc}
             title="PROMISE"
           />
           <Button
@@ -74,7 +77,7 @@ export default function HomePage() {
           <Button
             style={styles.debugButton}
             color="orange"
-            onPress={getTransactionHistory}
+            onPress={getTransactionByTrKey}
             title="TRANSACTION HISTORY WITH KEY"
           />
       </View>

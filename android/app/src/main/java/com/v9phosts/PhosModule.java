@@ -4,22 +4,21 @@ import android.app.Activity;
 
 import androidx.annotation.Nullable;
 
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.uimanager.IllegalViewOperationException;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CompletionException;
-import android.telecom.Call;
 import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import digital.paynetics.phos.PhosSdk;
 import digital.paynetics.phos.exceptions.PhosException;
@@ -47,11 +46,41 @@ public class PhosModule extends ReactContextBaseJavaModule{
     private static final String SALE_ERROR = "AUTH_ERROR";
     private static final String REFUND_ERROR = "INIT_ERROR";
     private static final String ERROR = "ERROR";
-
-    @ReactMethod public void promiseTest(Integer i, final Promise promise){
-        Log.d("Message: ", String.valueOf("Message: "+i));
+    public static WritableArray response;
+    private TransactionState changeState(String state) {
+        switch (state){
+            case "successful":
+                return TransactionState.SUCCESSFUL;
+            case "failed":
+                return TransactionState.FAILED;
+            case "pending":
+                return TransactionState.PENDING;
+            case "unknown":
+                return TransactionState.UNKNOWN;
+            default:
+                return null;
+        }
+    };
+    private TransactionType changeType(String type) {
+        switch (type){
+            case "sale":
+                return TransactionType.SALE;
+            case "void":
+                return TransactionType.VOID;
+            case "refund":
+                return TransactionType.REFUND;
+            default:
+                return null;
+        }
+    };
+    @ReactMethod public void promiseTest(Integer i, final Promise promise) {
+        Log.d("Message ", String.valueOf("Message "+i));
+        WritableMap res = new WritableNativeMap();
         if(i<10) {
-            promise.resolve(i);
+            Log.d("Message ", String.valueOf("Test successful: "));
+            res.putInt("Message", 200);
+            res.putInt("value", i);
+            promise.resolve(res);
         } else {
             promise.reject(INIT_ERROR, "Initialization error");
         }
@@ -60,12 +89,16 @@ public class PhosModule extends ReactContextBaseJavaModule{
         InitCallback initCallback = null;
         ReactApplicationContext reactContext = getReactApplicationContext();
         Activity currentActivity = getCurrentActivity();
-
+        WritableMap res = new WritableNativeMap();
         PhosSdk.getInstance().init(reactContext.getApplicationContext(), new InitCallback() {
             @Override
             public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
-                Log.d("Message: ", String.valueOf("Initialization successful: "+data+" "+map));
-                promise.resolve(true); //JSON
+                Log.d("Message ", String.valueOf("Initialization successful: "+data+" "+map));
+                res.putInt("status", 200);
+                res.putString("message", "Module initialized");
+                if(data!=null)res.putString("data", data.toString());
+                if(map!=null)res.putString("map", map.toString());
+                promise.resolve(res); //JSON
             }
             @Override
             public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
@@ -74,36 +107,41 @@ public class PhosModule extends ReactContextBaseJavaModule{
         });
     };
     @ReactMethod void authenticate(String issuer, String token, String license, final Promise promise){
-        Log.d("Message: ", String.valueOf("Authentication started "));
-        Activity currentActivity = getCurrentActivity();
-        InitCallback initCallback = null;
-
+        Log.d("Message ", String.valueOf("Authentication started "));
+        WritableMap res = new WritableNativeMap();
         PhosSdk.getInstance().authenticate(issuer, license, token, new AuthCallback(){
             @Override
             public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
-                Log.d("Message: ", String.valueOf("Authentication successful "+ data +" "+ map));
-                promise.resolve(issuer+" with parameters of "+data+" "+map); //JSON
+                Log.d("Message ", String.valueOf("Authentication successful "+ data +" "+ map));
+                res.putInt("status", 200);
+                res.putString("message", "Authentication successful");
+                if(data!=null)res.putString("data", data.toString());
+                if(map!=null)res.putString("map", map.toString());
+                promise.resolve(res); //JSON
             }
             @Override
             public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
-                Log.d("Message: ", String.valueOf("Authentication failed "+ e +" "+ map));
-                promise.reject(AUTH_ERROR, "Authentication error: "+e+" extras: "+map); //JSON
+                Log.d("Message ", String.valueOf("Authentication failed: "+ e));
+                promise.reject(AUTH_ERROR, "Authentication error: "+e); //JSON
             }
         });
     };
     @ReactMethod void makeSaleExtras(Boolean showTransactionResult, final Promise promise){
-        Log.d("Message: ", String.valueOf("Sale processing started "));
+        Log.d("Message ", "Sale processing started ");
         Activity currentActivity = getCurrentActivity();
         Map<String, String> extras = new HashMap<>();
         extras.put("KEY_1", "Value 1"); //Example
         extras.put("KEY_2", "Value 2");
-        TransactionCallback transactionCallback =null;
-
+        WritableMap res = new WritableNativeMap();
         PhosSdk.getInstance().makeSale(currentActivity, showTransactionResult, extras, new TransactionCallback() {
             @Override
             public void onSuccess(String data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale successful "+data+" "+map));
-                promise.resolve("transaction_key: "+data+" extras: "+map); //JSON
+                res.putInt("status", 200);
+                res.putString("message", "Sale successful");
+                if(data!=null)res.putString("transaction_key", data);
+                if(map!=null)res.putString("map", map.toString());
+                promise.resolve(res); //JSON
                 //Sale successful
                 //data is transaction key
                 //extras is the Map passed in makeSale()
@@ -111,47 +149,56 @@ public class PhosModule extends ReactContextBaseJavaModule{
             @Override
             public void onFailure(PhosException e,@Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale failed "+e));
-                promise.reject(SALE_ERROR, "Sale error: "+e+" extras: "+map); //JSON
+                promise.reject(SALE_ERROR, "Sale error: "+e); //JSON
                 //Sale failed
             }
         });
     }
     @ReactMethod void makeSaleWithAmountExtras(double Amount, Boolean showTransactionResult, final Promise promise){
-        Log.d("Message: ", String.valueOf("Sale processing started "));
+        Log.d("Message ", String.valueOf("Sale processing started "));
         Activity currentActivity = getCurrentActivity();
         Map<String, String> extras = new HashMap<>();
         extras.put("KEY_1", "Value 1");
         extras.put("KEY_2", "Value 2");
-        TransactionCallback transactionCallback =null;
-
+        WritableMap res = new WritableNativeMap();
         PhosSdk.getInstance().makeSaleWithAmount(currentActivity,(double) Amount,showTransactionResult, extras, new TransactionCallback() {
             @Override
             public void onSuccess(String data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale successful "+data+" "+map));
-                promise.resolve("transaction_key: "+data+" extras: "+map); //JSON
+                res.putInt("status", 200);
+                res.putString("message", "Sale successful");
+                if(data!=null)res.putString("transaction_key", data);
+                if(map!=null)res.putString("map", map.toString());
+                promise.resolve(res); //JSON
             }
             @Override
             public void onFailure(PhosException e,@Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale failed "+e));
-                promise.reject(SALE_ERROR, "Sale error: "+e+" extras: "+map); //JSON
+                promise.reject(SALE_ERROR, "Sale error: "+e); //JSON
             }
         });
     };
     @ReactMethod void makeRefundExtras(String transactionKey, Boolean showTransactionResult,
                                        Boolean disablePrompt, final Promise promise){
-        Log.d("Message: ", String.valueOf("Sale refund started "));
+        Log.d("Message ", String.valueOf("Sale refund started "));
         Activity currentActivity = getCurrentActivity();
         Map<String, String> extras = new HashMap<>();
         extras.put("KEY_1", "Value 1"); //Example
         extras.put("KEY_2", "Value 2");
-        TransactionCallback transactionCallback =null;
-        Transaction transaction = null; //???
-
+        Transaction transaction = new Transaction(); //???
+        //Transaction transaction = null;
+        //Log.d("Transaction", String.valueOf(transaction));
+        ///??? Should be Transaction data apart? or should it be null?
+        WritableMap res = new WritableNativeMap();
         PhosSdk.getInstance().makeRefund(currentActivity, transaction, showTransactionResult, extras, disablePrompt, new TransactionCallback() {
             @Override
             public void onSuccess(String data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Refund successful "+data+" "+map));
-                promise.resolve("transaction_key: "+data+" extras: "+map); //JSON
+                res.putInt("status", 200);
+                res.putString("message", "Refund successful");
+                if(data!=null)res.putString("transaction_key", data);
+                if(map!=null)res.putString("map", map.toString());
+                promise.resolve(res); //JSON
                 //Refund successful
                 //data is transaction key
                 //extras is the Map passed in makeRefund()
@@ -159,25 +206,28 @@ public class PhosModule extends ReactContextBaseJavaModule{
             @Override
             public void onFailure(PhosException e,@Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Refund failed "+e));
-                promise.reject(REFUND_ERROR, "Refund error: "+e+" extras: "+map); //JSON
+                promise.reject(REFUND_ERROR, "Refund error: "+e); //JSON
                 //Refund failed
             }
         });
     };
     @ReactMethod void makeRefundWithAmountExtras(String transactionKey, Double amount, Boolean showTransactionResult,
                                                  Boolean disablePrompt, final Promise promise){
-        Log.d("Message: ", String.valueOf("Sale refund started "));
+        Log.d("Message ", String.valueOf("Sale refund started "));
         Activity currentActivity = getCurrentActivity();
         Map<String, String> extras = new HashMap<>();
         extras.put("KEY_1", "Value 1"); //Example
         extras.put("KEY_2", "Value 2");
-        TransactionCallback transactionCallback =null;
-
+        WritableMap res = new WritableNativeMap();
         PhosSdk.getInstance().makeRefundWithAmount(currentActivity, transactionKey, (double) amount,showTransactionResult, extras, disablePrompt, new TransactionCallback() {
             @Override
             public void onSuccess(String data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Refund successful "+data+" "+map));
-                promise.resolve("transaction_key: "+data+" extras: "+map); //JSON
+                res.putInt("status", 200);
+                res.putString("message", "Refund successful");
+                if(data!=null)res.putString("transaction_key", data);
+                if(map!=null)res.putString("map", map.toString());
+                promise.resolve(res); //JSON
                 //Refund successful
                 //data is transaction key
                 //extras is the Map passed in makeRefund()
@@ -185,66 +235,83 @@ public class PhosModule extends ReactContextBaseJavaModule{
             @Override
             public void onFailure(PhosException e,@Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Refund failed "+e));
-                promise.reject(REFUND_ERROR, "Refund error: "+e+" extras: "+map); //JSON
+                promise.reject(REFUND_ERROR, "Refund error: "+e); //JSON
                 //Refund failed
             }
         });
     };
     @ReactMethod void makeVoidExtras(String transactionKey, Boolean showTransactionResult,
                                      Boolean disablePrompt, final Promise promise){
-        Log.d("Message: ", String.valueOf("Void started "));
+        Log.d("Message ", String.valueOf("Void started "));
         Activity currentActivity = getCurrentActivity();
         Map<String, String> extras = new HashMap<>();
         extras.put("KEY_1", "Value 1"); //Example
         extras.put("KEY_2", "Value 2");
-        TransactionCallback transactionCallback =null;
+        WritableMap res = new WritableNativeMap();
         PhosSdk.getInstance().makeVoid(currentActivity, transactionKey, showTransactionResult, extras, disablePrompt, new TransactionCallback() {
             @Override
             public void onSuccess(String data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Void successful "+data+" "+map));
-                promise.resolve("transaction_key: "+data+" extras: "+map); //JSON
+                res.putInt("status", 200);
+                res.putString("message", "Void successful");
+                if(data!=null)res.putString("data", data);
+                if(map!=null)res.putString("map", map.toString());
+                promise.resolve(res); //JSON
             }
 
             @Override
             public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale failed "+e));
-                promise.reject(ERROR, "Void error: "+e+" extras: "+map); //JSON
+                promise.reject(ERROR, "Void error: "+e); //JSON
             }
         });
     };
-    @ReactMethod void getTransactionHistory(int page, int limit, final Promise promise){
-        Log.d("Message: ", String.valueOf("Getting transaction history started "));
-        Date date = null;
-        TransactionType type = null;
-        TransactionState state = null;
-        PhosSdk.getInstance().getTransactionHistory(page, limit, date, type, state, new TransactionListCallback() {
+    @ReactMethod void getTransactionHistory(int page, int limit, String date,String type, String state,final Promise promise) throws ParseException {
+        Log.d("Message ", String.valueOf("Getting transaction history started "));
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        Date filterDate = formatter.parse(date);
+        Log.d("Filter transactions by date:", String.valueOf(filterDate));
+        TransactionState transactionState = changeState(state);
+        TransactionType transactionType = changeType(type);
+        Log.d("Filter transactions by type:", String.valueOf(transactionType));
+        Log.d("Filter transactions by state:", String.valueOf(transactionState));
+        WritableMap res = new WritableNativeMap();
+        PhosSdk.getInstance().getTransactionHistory(page, limit, filterDate, transactionType, transactionState, new TransactionListCallback() {
             @Override
             public void onSuccess(Transactions data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
-                Log.d("Message: ", String.valueOf(data.getItems()));
-                promise.resolve(String.valueOf(data.getItems())); //JSON
+                Log.d("Message", String.valueOf(data.getItems()));
+                res.putInt("status", 200);
+                res.putString("message", "Getting transaction history was successful");
+                res.putString("transaction_history", data.getItems().toString());
+                promise.resolve(res); //JSON
             }
 
             @Override
             public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale failed "+e));
-                promise.reject(ERROR, "Getting transaction error: "+e+" extras: "+map); //JSON
+                promise.reject(ERROR, "Getting transaction error: "+e); //JSON
             }
         });
-    };
+    }
     @ReactMethod void getTransactionByTrKey(String trKey, final Promise promise){
-        Log.d("Message: ", String.valueOf("Getting transaction history started "));
+        Log.d("Message", String.valueOf("Getting transaction history started "));
+        WritableMap res = new WritableNativeMap();
         PhosSdk.getInstance().getTransactionByTrKey(trKey, new TransactionDetailCallback() {
             @Override
             public void onSuccess(Transaction transaction, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
-                Log.d("Message: ", String.valueOf(transaction));
-                promise.resolve(String.valueOf(transaction)); //JSON
+                Log.d("Message", String.valueOf(transaction));
+                res.putInt("status", 200);
+                res.putString("message", "Getting transaction history was successful");
+                res.putString("transaction", transaction.toString());
+                promise.resolve(res); //JSON
             }
 
             @Override
             public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale failed "+e));
-                promise.reject(ERROR, "Getting transaction error: "+e+" extras: "+map); //JSON
+                promise.reject(ERROR, "Getting transaction error: "+e); //JSON
             }
         });
     };
 }
+

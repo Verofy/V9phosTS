@@ -3,3 +3,8 @@ export function handleValue(val){
         return false;
     } else return val;
 }
+
+export function handleRes(r){
+    var result = Object.assign({}, r)
+    return result;
+}
