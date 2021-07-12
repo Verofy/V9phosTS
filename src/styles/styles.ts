@@ -25,8 +25,8 @@ export const styles = StyleSheet.create({
     fontWeight:"bold"
   },
   debugButton:{
-    margin:10,
-    padding:10
+    flex:1,
+    width:250,
   }
 });
 
