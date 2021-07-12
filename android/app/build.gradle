@@ -206,7 +206,6 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation 'androidx.activity:activity:1.2.0-alpha06'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     //PhosSDK
