@@ -11,7 +11,8 @@ import {
   makeSaleWithAmount,
   makeVoid,
   getTransactionHistory,
-  getTransactionByTrKey
+  getTransactionByTrKey,
+  initTest
 } from '../helpers/appHelpers';
 
 export interface Props { }
@@ -42,6 +43,9 @@ export default class HomePage extends React.Component<Props, State> {
           </View>
           <View style={styles.debugButton}>
             <Button color="#57F289" onPress={init} title="INIT" />
+          </View>
+          <View style={styles.debugButton}>
+            <Button color="#efF559" onPress={initTest} title="INIT TEST" />
           </View>
           <View style={styles.debugButton}>
             <Button color="lime" onPress={authenticate} title="AUTHENTICATE" />

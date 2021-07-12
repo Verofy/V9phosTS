@@ -1,15 +1,13 @@
 import React from 'react';
-import { Component } from 'react';
 import { View } from 'react-native';
 import {styles} from './src/styles/styles';
 import HomeScreen from './src/screens/HomeScreen';
+import LoginScreen from './src/screens/LoginScreen';
 
-export default class App extends React.Component{
-  render(){
+export default function App(){
     return (
       <View style={styles.container}>
-        <HomeScreen/>
+        <LoginScreen/>
       </View>
     );
-  }
 }
