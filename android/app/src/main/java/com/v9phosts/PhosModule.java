@@ -32,7 +32,6 @@ import digital.paynetics.phos.sdk.entities.Transactions;
 import digital.paynetics.phos.sdk.enums.TransactionState;
 import digital.paynetics.phos.sdk.enums.TransactionType;
 
-
 public class PhosModule extends ReactContextBaseJavaModule{
     PhosModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -95,9 +94,9 @@ public class PhosModule extends ReactContextBaseJavaModule{
             public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message ", String.valueOf("Initialization successful: "+data+" "+map));
                 res.putInt("status", 200);
-                res.putString("message", "Module initialized");
-                if(data!=null)res.putString("data", data.toString());
-                if(map!=null)res.putString("map", map.toString());
+                res.putString("message", "SDK initialized");
+                if(data!=null)res.putString("data", data.toString()); //Data type?
+                if(map!=null)res.putString("map", map.toString()); //To ReadableMap
                 promise.resolve(res); //JSON
             }
             @Override
@@ -115,8 +114,8 @@ public class PhosModule extends ReactContextBaseJavaModule{
                 Log.d("Message ", String.valueOf("Authentication successful "+ data +" "+ map));
                 res.putInt("status", 200);
                 res.putString("message", "Authentication successful");
-                if(data!=null)res.putString("data", data.toString());
-                if(map!=null)res.putString("map", map.toString());
+                if(data!=null)res.putString("data", data.toString()); //Data type?
+                if(map!=null)res.putString("map", map.toString()); //To ReadableMap
                 promise.resolve(res); //JSON
             }
             @Override
@@ -258,7 +257,6 @@ public class PhosModule extends ReactContextBaseJavaModule{
                 if(map!=null)res.putString("map", map.toString());
                 promise.resolve(res); //JSON
             }
-
             @Override
             public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale failed "+e));
@@ -270,9 +268,9 @@ public class PhosModule extends ReactContextBaseJavaModule{
         Log.d("Message ", String.valueOf("Getting transaction history started "));
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         Date filterDate = formatter.parse(date);
-        Log.d("Filter transactions by date:", String.valueOf(filterDate));
         TransactionState transactionState = changeState(state);
         TransactionType transactionType = changeType(type);
+        Log.d("Filter transactions by date:", String.valueOf(filterDate));
         Log.d("Filter transactions by type:", String.valueOf(transactionType));
         Log.d("Filter transactions by state:", String.valueOf(transactionState));
         WritableMap res = new WritableNativeMap();
@@ -283,9 +281,9 @@ public class PhosModule extends ReactContextBaseJavaModule{
                 res.putInt("status", 200);
                 res.putString("message", "Getting transaction history was successful");
                 res.putString("transaction_history", data.getItems().toString());
+                if(map!=null)res.putString("map", map.toString()); //To ReadableMap
                 promise.resolve(res); //JSON
             }
-
             @Override
             public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale failed "+e));
@@ -303,9 +301,9 @@ public class PhosModule extends ReactContextBaseJavaModule{
                 res.putInt("status", 200);
                 res.putString("message", "Getting transaction history was successful");
                 res.putString("transaction", transaction.toString());
+                if(map!=null)res.putString("map", map.toString()); //To ReadableMap
                 promise.resolve(res); //JSON
             }
-
             @Override
             public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                 Log.d("Message", String.valueOf("Sale failed "+e));
