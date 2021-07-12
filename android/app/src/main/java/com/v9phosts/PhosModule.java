@@ -4,6 +4,7 @@ import android.app.Activity;
 
 import androidx.annotation.Nullable;
 
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -107,6 +108,31 @@ public class PhosModule extends ReactContextBaseJavaModule{
                     @Override
                     public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                         promise.reject(INIT_ERROR, "Initialization error"); //JSON
+                    }
+                });
+            }
+        });
+    };
+
+    @ReactMethod void initTest(/*final Promise promise*/ Callback callback){
+        Log.d("Message ", String.valueOf("Initialization started "));
+        ReactApplicationContext reactContext = getReactApplicationContext();
+        WritableMap res = new WritableNativeMap();
+        Handler handler = new Handler(reactContext.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PhosSdk.getInstance().init(reactContext.getApplicationContext(), new InitCallback() {
+                    @Override
+                    public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                        Log.d("Message ", String.valueOf("Initialization successful"));
+                        res.putInt("status", 200);
+                        res.putString("message", "SDK initialized");
+                        callback.invoke(res);
+                    }
+                    @Override
+                    public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                        callback.invoke(e);
                     }
                 });
             }
