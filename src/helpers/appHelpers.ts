@@ -21,6 +21,7 @@ export async function init() {
   return await PhosModule.init()
     .then((r: any) => {
       console.info(r.message);
+      authenticate();
       return r;
     })
     .catch((err: any) => {

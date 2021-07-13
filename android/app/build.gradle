@@ -133,7 +133,8 @@ android {
     packagingOptions{
         doNotStrip"*/*/*.so"
     }
-
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
     ndkVersion rootProject.ext.ndkVersion
 
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -149,6 +150,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
     }
     splits {
         abi {
@@ -179,6 +183,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
+            minifyEnabled false
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -207,6 +212,54 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    implementation files('libs/phos-sdk-staging-release.aar')
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.squareup.okhttp3:okhttp:4.4.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation "com.google.android.gms:play-services-location:18.0.0"
+    implementation('com.squareup.picasso:picasso:2.71828') {
+        exclude group: "com.android.support", module: "exifinterface"
+    }
+     implementation 'io.github.inflationx:viewpump:2.0.3'
+    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+    implementation 'androidx.lifecycle:lifecycle-process:2.3.0'
+
+    annotationProcessor "org.androidannotations:androidannotations:4.8.0"
+    implementation "org.androidannotations:androidannotations-api:4.8.0"
+
+    implementation 'com.google.dagger:dagger-android:2.21'
+    implementation 'com.google.dagger:dagger-android-support:2.21' // if you use the support libraries
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.21'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.25.2'
+
+    implementation('io.github.inflationx:calligraphy3:3.1.1') {
+        exclude group: "com.android.support", module: "support-media-compat"
+    }
+
+    implementation 'com.google.firebase:firebase-core:18.0.2'
+    implementation 'com.google.firebase:firebase-crashlytics:17.3.1'
+    implementation "com.google.android.gms:play-services-safetynet:17.0.0"
+
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.3'
+    implementation 'com.jakewharton.rxrelay3:rxrelay:3.0.0'
+
+    implementation 'com.github.framgia:android-emulator-detector:1.4.0'
+    implementation 'com.scottyab:rootbeer-lib:0.0.6'
+    implementation 'com.darwinsys:hirondelle-date4j:1.5.1'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'net.sourceforge.streamsupport:streamsupport:1.6.1'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
+    implementation 'com.squareup:otto:1.3.8'
+
+    implementation 'com.bolyartech.forge.android:forge-android:10.0.0'
+
 
     //PhosSDK
     //debugImplementation files('libs/phos-sdk-mock.aar')

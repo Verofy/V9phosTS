@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
@@ -90,12 +91,14 @@ public class PhosModule extends ReactContextBaseJavaModule{
     @ReactMethod void init(final Promise promise){
         Log.d("Message ", String.valueOf("Initialization started "));
         ReactApplicationContext reactContext = getReactApplicationContext();
+        Context applicationContext = getReactApplicationContext();
+        Activity currentActivity = getCurrentActivity();
         WritableMap res = new WritableNativeMap();
         Handler handler = new Handler(reactContext.getMainLooper());
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PhosSdk.getInstance().init(reactContext.getApplicationContext(), new InitCallback() {
+                PhosSdk.getInstance().init(currentActivity.getApplicationContext(), new InitCallback() {
                     @Override
                     public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                         Log.d("Message ", String.valueOf("Initialization successful"));
@@ -104,6 +107,7 @@ public class PhosModule extends ReactContextBaseJavaModule{
                         //if(data!=null)res.putString("data", data.toString()); //Data type?
                         //if(map!=null)res.putString("map", map.toString()); //To ReadableMap
                         promise.resolve(res); //JSON
+
                     }
                     @Override
                     public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
@@ -114,7 +118,7 @@ public class PhosModule extends ReactContextBaseJavaModule{
         });
     };
 
-    @ReactMethod void initTest(/*final Promise promise*/ Callback callback){
+    @ReactMethod void initTest(Callback callback){
         Log.d("Message ", String.valueOf("Initialization started "));
         ReactApplicationContext reactContext = getReactApplicationContext();
         WritableMap res = new WritableNativeMap();
@@ -126,9 +130,22 @@ public class PhosModule extends ReactContextBaseJavaModule{
                     @Override
                     public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                         Log.d("Message ", String.valueOf("Initialization successful"));
-                        res.putInt("status", 200);
-                        res.putString("message", "SDK initialized");
-                        callback.invoke(res);
+                        PhosSdk.getInstance().authenticate("phos", "2ac5040c-2ae7-49b9-a71e-9ace3528d69d", "V9SDK", new AuthCallback(){
+                            @Override
+                            public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                                Log.d("Message ", String.valueOf("Authentication successful "+ data +" "+ map));
+                                res.putInt("status", 200);
+                                res.putString("message", "Authentication successful");
+                                //if(data!=null)res.putString("data", data.toString()); //Data type?
+                                //if(map!=null)res.putString("map", map.toString()); //To ReadableMap
+                                callback.invoke(res);
+                            }
+                            @Override
+                            public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                                Log.d("Message ", String.valueOf("Authentication failed: "+ e));
+                                callback.invoke(AUTH_ERROR, "Authentication error: "+e); //JSON
+                            }
+                        });
                     }
                     @Override
                     public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
