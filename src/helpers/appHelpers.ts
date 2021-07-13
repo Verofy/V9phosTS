@@ -35,7 +35,7 @@ export function initTest() {
 }
 
 export async function authenticate() {
-  const issuer = 'V9';
+  const issuer = 'phos';
   const token = '2ac5040c-2ae7-49b9-a71e-9ace3528d69d';
   const license = 'V9SDK';
   return await PhosModule.authenticate(issuer, token, license)

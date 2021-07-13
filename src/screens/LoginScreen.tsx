@@ -1,77 +1,73 @@
-import React, { useState } from 'react';
-import { Text, View, TextInput, Button, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, View, TextInput, Button, KeyboardAvoidingView, Image, TouchableOpacity } from 'react-native';
+import { TextField } from '../components/TextField';
+import { connect } from 'react-redux';
+import { UserState } from '../redux/models';
+import { ApplicationState } from '../redux/reducers';
+import { OnUserCheck, OnUserLogin } from '../redux/actions/userActions';
 import { verofyCheck } from '../helpers/verofyHelpers';
-import { styles, debug } from '../styles/styles';
+import { styles, debug, button } from '../styles/styles';
+import { ButtonWithTitle } from '../components/ButtonWithTitle';
+import {store} from '../redux/store';
 
-export interface Props {
-
+interface LoginProps {
+  OnUserCheck: Function;
+  OnUserLogin: Function;
+  userReducer: UserState
 }
 
-interface State {
-  login: string;
-  pass: string;
+const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, userReducer }) => {
+
+  const [phone, setPhone] = useState('');
+  const [code, setCode] = useState('')
+  const [title, setTitle] = useState('LOGIN')
+  const [isChecked, setIsChecked] = useState(false)
+
+  async function onTapAuthenticate() {
+    const phoneDebug = "+527799448853";
+    const codeDebug = "123456";
+    OnUserCheck(phoneDebug);
+    var user = store.getState();
+    console.log(user)
+    setIsChecked(true);
+
+    OnUserLogin(code);
+    
+    setTitle(!isChecked ? 'Check' : 'Login');
+  }
+
+  return (
+    <View style={styles.container}>
+      <KeyboardAvoidingView>
+        <View style={styles.container}>
+          <Text style={styles.h1}>V9-phos</Text>
+        </View>
+        <View style={debug.inputSection}>
+          <TextField
+            placeholder="phone"
+            onTextChange={setPhone}
+            isSecure={false}
+          />
+          {isChecked && <TextField placeholder="code" onTextChange={setCode} isSecure={false} />}
+        </View>
+        <View style={styles.container}>
+          <ButtonWithTitle
+            title={!isChecked ? "Send code" : "Login"}
+            height={50}
+            width={250}
+            onTap={onTapAuthenticate}
+          />
+        </View>
+      </KeyboardAvoidingView>
+      <View style={styles.container}><Text>Footer</Text></View>
+    </View>
+  );
 }
 
-export default class LoginScreen extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+const mapStateToProps = (state: ApplicationState) => ({
+  userReducer: state.userReducer
+})
 
-    this.state = {
-      login: '',
-      pass: '',
-    };
-  }
-  public handleLogin(event: any): void {
-    console.info(event);
-    this.setState({ login: event });
-    console.info(this.state.login)
-  }
+const LoginScreen = connect(mapStateToProps, { OnUserLogin, OnUserCheck })(_LoginScreen)
 
-  handleSubmit = () => {
-    console.log(this.state.login)
-    verofyCheck(this.state.login)
-  }
-
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <KeyboardAvoidingView>
-          <View style={styles.container}>
-            <Text style={styles.h1}>V9-phos</Text>
-          </View>
-          <View style={debug.inputSection}>
-            <TextInput
-              value={this.state.login}
-              style={debug.input}
-              placeholderTextColor='grey'
-              maxLength={30}
-              keyboardType='phone-pad'
-              placeholder="phone number"
-              autoCorrect={false}
-              autoCapitalize='none'
-              onChangeText={event => this.setState({ login: event })}
-            />
-            <TextInput
-              style={debug.input}
-              placeholderTextColor='grey'
-              maxLength={30}
-              keyboardType='default'
-              placeholder="password"
-              autoCorrect={false}
-              autoCapitalize='none'
-            //onChangeText={this.handlePassword}
-            />
-            <View style={styles.debugButton}>
-              <Button
-                color="black"
-                onPress={() => this.handleSubmit}
-                title="LOGIN"
-              />
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      </View>
-    );
-  }
-}
+export { LoginScreen }

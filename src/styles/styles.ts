@@ -31,6 +31,25 @@ export const styles = StyleSheet.create({
 
 export const containers = StyleSheet.create({});
 
+export const textField = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    height: 50,
+    borderRadius: 30,
+    backgroundColor: '#DBDBDB',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    margin:15
+  },
+  textField: {
+    flex: 1,
+    height: 50,
+    fontSize: 20,
+    color: '#000'
+  }
+});
+
 export const debug = StyleSheet.create({
   inputSection: {
     flex: 1,
@@ -40,5 +59,26 @@ export const debug = StyleSheet.create({
     borderWidth: 1,
     width: 250,
     color: 'black'
+  }
+});
+
+export const button = StyleSheet.create({
+  btn: {
+    flex: 1,
+    display: 'flex',
+    maxHeight: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 30,
+    alignSelf: 'center',
+    marginTop: 20
+  }
+});
+
+export const navigationStyles = StyleSheet.create({
+  tabIcon: {
+    width: 30,
+    height: 30
   }
 });

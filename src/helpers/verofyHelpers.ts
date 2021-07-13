@@ -2,10 +2,11 @@ import { method, end } from './constants';
 import { getData, storeData, verofyFetch } from './helpers';
 
 export function verofyCheck(u: string) {
+  console.log("verofyCheck called")
   var raw = JSON.stringify({
     login: u
   });
-  verofyFetch(method.POST, end.userCheck, raw).then((val: void) => {
+  return verofyFetch(method.POST, end.userCheck, raw).then((val: void) => {
     console.log(val);
     storeData('LOGIN', u);
   });
@@ -23,7 +24,7 @@ export async function verofyLogin(p: string) {
       push_token: ''
     }
   });
-  verofyFetch(method.POST, end.userLogin, raw).then((val: void) => {
+  return verofyFetch(method.POST, end.userLogin, raw).then((val: void) => {
     console.log(val);
     storeData('USER_DATA', val);
   });
