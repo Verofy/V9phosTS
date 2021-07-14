@@ -7,21 +7,15 @@ export function getConstants() {
   console.log('GET CONSTANTS:', PhosModule.getConstants());
 }
 
-export async function promiseTest() {
-  return await PhosModule.promiseTest(5)
-    .then((r: any) => {
-      console.log(r);
-    })
-    .catch((err: any) => {
-      console.error(err.mes, err);
-    });
+export async function isInitialised() {
+  PhosModule.isInitialised();
 }
 
 export async function init() {
   return await PhosModule.init()
     .then((r: any) => {
       console.info(r.message);
-      authenticate();
+      //authenticate();
       return r;
     })
     .catch((err: any) => {
@@ -30,9 +24,7 @@ export async function init() {
 }
 
 export function initTest() {
-  PhosModule.initTest((val: string) => {
-    console.log(val);
-  });
+  PhosModule.initTest();
 }
 
 export async function authenticate() {

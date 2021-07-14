@@ -5,14 +5,14 @@ import {
   authenticate,
   makeSale,
   init,
-  promiseTest,
   makeRefund,
   makeRefundWithAmount,
   makeSaleWithAmount,
   makeVoid,
   getTransactionHistory,
   getTransactionByTrKey,
-  initTest
+  initTest,
+  isInitialised
 } from '../helpers/appHelpers';
 
 export interface Props { }
@@ -39,13 +39,13 @@ export default class HomePage extends React.Component<Props, State> {
         </View>
         <View style={styles.container}>
           <View style={styles.debugButton}>
-            <Button color="purple" onPress={promiseTest} title="PROMISE" />
+            <Button color="purple" onPress={isInitialised} title="IS INITIALISED" />
           </View>
           <View style={styles.debugButton}>
             <Button color="#57F289" onPress={init} title="INIT" />
           </View>
           <View style={styles.debugButton}>
-            <Button color="black" onPress={initTest} title="INIT TEST" />
+            <Button color="black" onPress={initTest} title="TEST" />
           </View>
           <View style={styles.debugButton}>
             <Button color="lime" onPress={authenticate} title="AUTHENTICATE" />

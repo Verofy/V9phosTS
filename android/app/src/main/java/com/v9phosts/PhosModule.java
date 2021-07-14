@@ -1,8 +1,10 @@
 package com.v9phosts;
 
+import android.Manifest;
 import android.app.Activity;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
@@ -21,10 +23,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
 import digital.paynetics.phos.PhosSdk;
+import digital.paynetics.phos.PhosSdk;
+import digital.paynetics.phos.PhosSdkApplication;
 import digital.paynetics.phos.exceptions.PhosException;
 import digital.paynetics.phos.sdk.callback.AuthCallback;
 import digital.paynetics.phos.sdk.callback.InitCallback;
@@ -37,6 +43,8 @@ import digital.paynetics.phos.sdk.enums.TransactionState;
 import digital.paynetics.phos.sdk.enums.TransactionType;
 
 public class PhosModule extends ReactContextBaseJavaModule{
+
+    
     PhosModule(ReactApplicationContext reactContext) {
         super(reactContext);
     }
@@ -76,19 +84,143 @@ public class PhosModule extends ReactContextBaseJavaModule{
                 return null;
         }
     };
-    @ReactMethod public void promiseTest(Integer i, final Promise promise) {
-        Log.d("Message ", String.valueOf("Message "+i));
-        WritableMap res = new WritableNativeMap();
-        if(i<10) {
-            Log.d("Message ", String.valueOf("Test successful: "));
-            res.putInt("Message", 200);
-            res.putInt("value", i);
-            promise.resolve(res);
-        } else {
-            promise.reject(INIT_ERROR, "Initialization error");
+
+    private static final int REQUEST_CODE_ASK_PERMISSIONS_LOCATION = 9000;
+    private String[] permission = new String[]{ Manifest.permission.ACCESS_FINE_LOCATION };
+
+
+
+    @ReactMethod public void isInitialised() {
+        Log.d("IsInitialised", String.valueOf(PhosSdk.getInstance().isInitialised()));
+        Context context = getReactApplicationContext(); // or activity.getApplicationContext()
+        PackageManager packageManager = context.getPackageManager();
+
+        try {
+            Log.d("packageManager", String.valueOf(packageManager));
+            Log.d("info", Manifest.permission.READ_PHONE_STATE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     };
-    @ReactMethod void init(final Promise promise){
+
+
+    @ReactMethod void initTest(){
+        Log.d("Message ", String.valueOf("Test initialization started "));
+        ReactApplicationContext reactContext = getReactApplicationContext();
+        WritableMap res = new WritableNativeMap();
+        Handler handler = new Handler(reactContext.getMainLooper());
+        try{
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    PhosSdk.getInstance().init(reactContext.getApplicationContext(), new InitCallback() {
+                        @Override
+                        public void onSuccess(Void data, Map<String, String> map) {
+                            Log.d("Message ", String.valueOf("Test initialization successful, isInitialised: "+PhosSdk.getInstance().isInitialised()));
+                            //authenticateTest("phos", "2ac5040c-2ae7-49b9-a71e-9ace3528d69d", "V9SDK");
+                        }
+                        @Override
+                        public void onFailure(PhosException e, Map<String, String> map) {
+                            Log.d("Message ", String.valueOf("Test initialization failed: "+ e));
+                        }
+                    });
+                }
+            });
+        }catch(Exception e){
+            Log.d("Message ", String.valueOf("Error caught"+ e));
+        }
+        Log.d("Message ", String.valueOf("Test initialization finished, isInitialised: "+PhosSdk.getInstance().isInitialised()));
+    };
+    void authenticateTest(String issuer, String token, String license){
+        Log.d("Message ", String.valueOf("Authentication started"));
+        WritableMap res = new WritableNativeMap();
+        ReactApplicationContext reactContext = getReactApplicationContext();
+        Handler handler = new Handler(reactContext.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    PhosSdk.getInstance().authenticate(issuer, license, token, new AuthCallback(){
+                        @Override
+                        public void onSuccess(Void data, Map<String, String> map) {
+                            makeSaleWithAmountTest(10,true);
+                            Log.d("Message ", String.valueOf("Authentication successful "+ ", isInitialised: "+PhosSdk.getInstance().isInitialised()+" "+ PhosSdk.getInstance().getClass()));
+                        }
+                        @Override
+                        public void onFailure(PhosException e, Map<String, String> map) {
+                            Log.d("Message ", String.valueOf("Authentication failed: "+ e));
+                        }
+                    });
+                } catch(Exception e){
+                    Log.d("Message ", String.valueOf("Error caught"+ e));
+                }
+            }
+        });
+        Log.d("Message ", String.valueOf("Authentication finished, isInitialised: "+PhosSdk.getInstance().isInitialised()));
+        //makeSaleTest(true);
+
+    };
+    void makeSaleTest(Boolean showTransactionResult){
+        Log.d("Message ", "Sale processing started ");
+        Activity currentActivity = getCurrentActivity();
+        Map<String, String> extras = new HashMap<>();
+        extras.put("KEY_1", "Value 1"); //Example
+        extras.put("KEY_2", "Value 2");
+        WritableMap res = new WritableNativeMap();
+        ReactApplicationContext reactContext = getReactApplicationContext();
+        Handler handler = new Handler(reactContext.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PhosSdk.getInstance().makeSale(currentActivity, showTransactionResult, extras, new TransactionCallback() {
+                    @Override
+                    public void onSuccess(String data, Map<String, String> map) {
+                        Log.d("Message", String.valueOf("Sale successful "+data+" "+map));
+                    }
+                    @Override
+                    public void onFailure(PhosException e, Map<String, String> map) {
+                        Log.d("Message", String.valueOf("Sale failed "+e));
+                        //Sale failed
+                    }
+                });
+            }
+        });
+        Log.d("Message ", "Sale processing finished ");
+    };
+
+    void makeSaleWithAmountTest(double Amount, Boolean showTransactionResult){
+        Log.d("Message ", String.valueOf("Sale processing with amount started "));
+        Activity currentActivity = getCurrentActivity();
+        Map<String, String> extras = new HashMap<>();
+        extras.put("KEY_1", "Value 1");
+        extras.put("KEY_2", "Value 2");
+        WritableMap res = new WritableNativeMap();
+        ReactApplicationContext reactContext = getReactApplicationContext();
+        Handler handler = new Handler(reactContext.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PhosSdk.getInstance().makeSaleWithAmount(currentActivity,(double) Amount,showTransactionResult, extras, new TransactionCallback() {
+                    @Override
+                    public void onSuccess(String data, Map<String, String> map) {
+                        Log.d("Message", String.valueOf("Sale with amount successful "+data+" "+map));
+                        //res.putInt("status", 200);
+                        //res.putString("message", "Sale successful");
+                        //if(data!=null)res.putString("transaction_key", data);
+                        //if(map!=null)res.putString("map", map.toString());
+                    }
+                    @Override
+                    public void onFailure(PhosException e, Map<String, String> map) {
+                        Log.d("Message", String.valueOf("Sale failed "+e));
+                    }
+                });
+            }
+        });
+        Log.d("Message ", "Sale processing with amount finished ");
+    };
+
+    @ReactMethod void init(final Promise promise) throws InterruptedException {
         Log.d("Message ", String.valueOf("Initialization started "));
         ReactApplicationContext reactContext = getReactApplicationContext();
         Context applicationContext = getReactApplicationContext();
@@ -98,9 +230,9 @@ public class PhosModule extends ReactContextBaseJavaModule{
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PhosSdk.getInstance().init(currentActivity.getApplicationContext(), new InitCallback() {
+                PhosSdk.getInstance().init(reactContext.getApplicationContext(), new InitCallback() {
                     @Override
-                    public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                    public void onSuccess(Void data, Map<String, String> map) {
                         Log.d("Message ", String.valueOf("Initialization successful"));
                         res.putInt("status", 200);
                         res.putString("message", "SDK initialized");
@@ -110,52 +242,15 @@ public class PhosModule extends ReactContextBaseJavaModule{
 
                     }
                     @Override
-                    public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                    public void onFailure(PhosException e, Map<String, String> map) {
                         promise.reject(INIT_ERROR, "Initialization error"); //JSON
                     }
                 });
             }
         });
+        Thread.sleep(4000);
+        Log.d("Message ", String.valueOf("Initialization finished"));
     };
-
-    @ReactMethod void initTest(Callback callback){
-        Log.d("Message ", String.valueOf("Initialization started "));
-        ReactApplicationContext reactContext = getReactApplicationContext();
-        WritableMap res = new WritableNativeMap();
-        Handler handler = new Handler(reactContext.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                PhosSdk.getInstance().init(reactContext.getApplicationContext(), new InitCallback() {
-                    @Override
-                    public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
-                        Log.d("Message ", String.valueOf("Initialization successful"));
-                        PhosSdk.getInstance().authenticate("phos", "2ac5040c-2ae7-49b9-a71e-9ace3528d69d", "V9SDK", new AuthCallback(){
-                            @Override
-                            public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
-                                Log.d("Message ", String.valueOf("Authentication successful "+ data +" "+ map));
-                                res.putInt("status", 200);
-                                res.putString("message", "Authentication successful");
-                                //if(data!=null)res.putString("data", data.toString()); //Data type?
-                                //if(map!=null)res.putString("map", map.toString()); //To ReadableMap
-                                callback.invoke(res);
-                            }
-                            @Override
-                            public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
-                                Log.d("Message ", String.valueOf("Authentication failed: "+ e));
-                                callback.invoke(AUTH_ERROR, "Authentication error: "+e); //JSON
-                            }
-                        });
-                    }
-                    @Override
-                    public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
-                        callback.invoke(e);
-                    }
-                });
-            }
-        });
-    };
-
     @ReactMethod void authenticate(String issuer, String token, String license, final Promise promise){
         Log.d("Message ", String.valueOf("Authentication started "));
         WritableMap res = new WritableNativeMap();
@@ -166,7 +261,7 @@ public class PhosModule extends ReactContextBaseJavaModule{
             public void run() {
                 PhosSdk.getInstance().authenticate(issuer, license, token, new AuthCallback(){
                     @Override
-                    public void onSuccess(Void data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                    public void onSuccess(Void data, Map<String, String> map) {
                         Log.d("Message ", String.valueOf("Authentication successful "+ data +" "+ map));
                         res.putInt("status", 200);
                         res.putString("message", "Authentication successful");
@@ -175,7 +270,7 @@ public class PhosModule extends ReactContextBaseJavaModule{
                         promise.resolve(res); //JSON
                     }
                     @Override
-                    public void onFailure(PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                    public void onFailure(PhosException e, Map<String, String> map) {
                         Log.d("Message ", String.valueOf("Authentication failed: "+ e));
                         promise.reject(AUTH_ERROR, "Authentication error: "+e); //JSON
                     }

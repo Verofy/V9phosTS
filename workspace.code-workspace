@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../Scan"
+		},
+		{
+			"path": "../sample_app_11022021_for_v9"
 		}
 	],
 	"settings": {}

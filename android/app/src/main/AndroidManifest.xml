@@ -4,8 +4,15 @@
   package="com.v9phosts">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+
 
     <application
+      tools:overrideLibrary="digital.paynetics.phos.sdk" 
+      android:allowBackup="true"
+      android:supportsRtl="true"
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
@@ -22,5 +29,6 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+      </activity>
     </application>
 </manifest>

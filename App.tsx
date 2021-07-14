@@ -16,8 +16,8 @@ const switchNavigator = createSwitchNavigator({
 
   landingStack: {
     screen: createStackNavigator({
-      //LoginScreen: LoginScreen,
-      HomePage:HomeScreen
+      LoginScreen: LoginScreen,
+      //HomePage:HomeScreen
     }, {
       defaultNavigationOptions: {
         headerShown: false
