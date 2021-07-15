@@ -44,9 +44,7 @@ export default class HomePage extends React.Component<Props, State> {
           <View style={styles.debugButton}>
             <Button color="#57F289" onPress={init} title="INIT" />
           </View>
-          <View style={styles.debugButton}>
-            <Button color="black" onPress={initTest} title="TEST" />
-          </View>
+        
           <View style={styles.debugButton}>
             <Button color="lime" onPress={authenticate} title="AUTHENTICATE" />
           </View>
@@ -90,6 +88,9 @@ export default class HomePage extends React.Component<Props, State> {
               onPress={getTransactionByTrKey}
               title="TRANSACTION HISTORY WITH KEY"
             />
+          </View>
+          <View style={styles.debugButton}>
+            <Button color="black" onPress={initTest} title="TEST" />
           </View>
         </View>
       </View>

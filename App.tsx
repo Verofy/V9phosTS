@@ -26,10 +26,8 @@ const switchNavigator = createSwitchNavigator({
 
   },
 
-  homeStack: createBottomTabNavigator({
-
-    // Home tab Icon
-    home: {
+  HomeStack: createBottomTabNavigator({
+    Home: {
       screen: createStackNavigator({
         HomePage: HomeScreen,
       }, {
@@ -38,32 +36,11 @@ const switchNavigator = createSwitchNavigator({
         }
       }),
     },
-
-    // Home tab Icon
-    Offer: {
+    SecondPage: {
       screen: createStackNavigator({
-        OfferPage: HomeScreen //
+        SecondPage: HomeScreen //
       }),
     },
-
-    // Home tab Icon
-    Cart: {
-      screen: createStackNavigator({
-        LoginPage: LoginScreen
-      }, {
-        defaultNavigationOptions: {
-          headerShown: false
-        }
-      }),
-    },
-    // Home tab Icon
-    Account: {
-      screen: createStackNavigator({
-        AccountPage: HomeScreen,
-        LoginPage: LoginScreen
-      }),
-    }
-
   })
 
 });

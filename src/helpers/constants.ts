@@ -5,5 +5,6 @@ export const method = {
 
 export const end = {
   userCheck:'/auth/user-check',
-  userLogin:'/auth/login'
+  userLogin:'/auth/login',
+  createToken(c:string){return '/customers/'+c+'/android-pay/token'}
 }

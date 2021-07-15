@@ -170,10 +170,10 @@ android {
             keyPassword 'android'
         }
         release {
-        storeFile file('V9phos.keystore')
-        storePassword 'beckham'
+        storeFile file('v9phos.keystore')
+        storePassword 'password123'
         keyAlias 'V9phos'
-        keyPassword 'beckham'
+        keyPassword 'password123'
     }
     }
     buildTypes {

@@ -1,8 +1,9 @@
 import { UserAction } from '../actions';
-import { UserModel, UserState } from '../models';
+import { LoginModel, UserModel, UserState } from '../models';
 
 const initialState: UserState = {
   user: {} as UserModel,
+  login: {} as LoginModel,
   error: undefined
 };
 
@@ -12,7 +13,7 @@ const UserReducer = (state: UserState = initialState, action: UserAction) => {
     case 'ON_USER_CHECK':
       return { ...state, user: payload };
     case 'ON_USER_LOGIN':
-      return { ...state, user: payload };
+      return { ...state, login: payload };
     case 'ON_USER_ERROR':
       return { ...state, error: payload };
     default:

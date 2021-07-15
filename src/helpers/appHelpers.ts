@@ -1,6 +1,7 @@
 import PhosModule from '../components/PhosModule';
 import { handleValue, handleRes } from './helpers';
 import React from 'react';
+import { Alert } from 'react-native';
 const showTransactionResult = true;
 const disablePrompt = true;
 export function getConstants() {
@@ -8,18 +9,25 @@ export function getConstants() {
 }
 
 export async function isInitialised() {
-  PhosModule.isInitialised();
+  return await PhosModule.isInitialised()
+  .then((r: any) => {
+    console.warn(JSON.stringify(r));
+    return r;
+  })
+  .catch((err: any) => {
+    console.warn(JSON.stringify(err));
+  });
 }
 
 export async function init() {
   return await PhosModule.init()
     .then((r: any) => {
-      console.info(r.message);
+      console.warn(JSON.stringify(r));
       //authenticate();
       return r;
     })
     .catch((err: any) => {
-      console.error(err);
+      console.warn(JSON.stringify(err));
     });
 }
 
@@ -33,33 +41,33 @@ export async function authenticate() {
   const license = 'V9SDK';
   return await PhosModule.authenticate(issuer, token, license)
     .then((r: any) => {
-      console.info(r.message);
+      console.warn(JSON.stringify(r));
       return r;
     })
     .catch((err: any) => {
-      console.error(err);
+      console.error(JSON.stringify(err));
     });
 }
 
 export async function makeSale() {
   return await PhosModule.makeSaleExtras(showTransactionResult)
     .then((r: any) => {
-      console.info(r.message);
+      console.warn(JSON.stringify(r));
       return r;
     })
     .catch((err: any) => {
-      console.error(err);
+      console.error(JSON.stringify(err));
     });
 }
 
 export async function makeSaleWithAmount(amount: number) {
   return await PhosModule.makeSaleWithAmountExtras(amount, showTransactionResult)
     .then((r: any) => {
-      console.info(r.message);
+      console.warn(JSON.stringify(r));
       return r;
     })
     .catch((err: any) => {
-      console.error(err);
+      console.error(JSON.stringify(err));
     });
 }
 
@@ -67,11 +75,11 @@ export async function makeRefund() {
   const transaction = 'MOCK+TRANSACTION+KEY';
   return await PhosModule.makeRefundExtras(transaction, showTransactionResult, disablePrompt)
     .then((r: any) => {
-      console.info(r.message);
+      console.warn(JSON.stringify(r));
       return r;
     })
     .catch((err: any) => {
-      console.error(err);
+      console.error(JSON.stringify(err));
     });
 }
 
@@ -79,11 +87,11 @@ export async function makeRefundWithAmount(amount: number) {
   const transaction = 'MOCK+TRANSACTION+KEY';
   return await PhosModule.makeRefundWithAmountExtras(transaction, amount, showTransactionResult, disablePrompt)
     .then((r: any) => {
-      console.info(r.message);
+      console.warn(JSON.stringify(r));
       return r;
     })
     .catch((err: any) => {
-      console.error(err);
+      console.error(JSON.stringify(err));
     });
 }
 
@@ -91,11 +99,11 @@ export async function makeVoid() {
   const transaction = 'MOCK+TRANSACTION+KEY';
   return await PhosModule.makeVoidExtras(transaction, showTransactionResult, disablePrompt)
     .then((r: any) => {
-      console.info(r.message);
+      console.warn(JSON.stringify(r));
       return r;
     })
     .catch((err: any) => {
-      console.error(err);
+      console.error(JSON.stringify(err));
     });
 }
 
@@ -108,10 +116,10 @@ export async function getTransactionHistory() {
   return await PhosModule.getTransactionHistory(page, limit, date, type, state)
     .then((r: any) => {
       console.info(r.message);
-      return r;
+      console.warn(JSON.stringify(r));
     })
     .catch((err: any) => {
-      console.error(err);
+      console.error(JSON.stringify(err));
     });
 }
 
@@ -120,9 +128,10 @@ export async function getTransactionByTrKey() {
   return await PhosModule.getTransactionByTrKey(trKey)
     .then((r: any) => {
       console.info(handleRes(r).transaction);
+      console.warn(JSON.stringify(r));
       return r;
     })
     .catch((err: any) => {
-      console.error(err);
+      console.error(JSON.stringify(err));
     });
 }

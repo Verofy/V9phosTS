@@ -11,7 +11,7 @@ export function handleRes(r: any) {
   return result;
 }
 
-export function verofyFetch(method: string, end: string, raw: string) {
+export function verofyFetch(method: string, end: string, raw: string, additional?:string) {
   const url = 'https://stg-main-service.verofy.com/api/v1/customer-portal' + end;
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
@@ -31,6 +31,7 @@ export function verofyFetch(method: string, end: string, raw: string) {
   //console.debug(url, requestOptions);
   return fetchAsync(url, requestOptions)
     .then((data) => {
+      console.log("Fetch "+url)
       return data;
     })
     .catch((err) => console.log(err.message));

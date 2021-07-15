@@ -90,16 +90,15 @@ public class PhosModule extends ReactContextBaseJavaModule{
 
 
 
-    @ReactMethod public void isInitialised() {
+    @ReactMethod public void isInitialised(final Promise promise) {
         Log.d("IsInitialised", String.valueOf(PhosSdk.getInstance().isInitialised()));
         Context context = getReactApplicationContext(); // or activity.getApplicationContext()
         PackageManager packageManager = context.getPackageManager();
 
         try {
-            Log.d("packageManager", String.valueOf(packageManager));
-            Log.d("info", Manifest.permission.READ_PHONE_STATE);
+            promise.resolve(String.valueOf(PhosSdk.getInstance().isInitialised())); //JSON
         } catch (Exception e) {
-            e.printStackTrace();
+            promise.reject(ERROR, "Error "+e); //JSON
         }
 
     };
@@ -118,7 +117,7 @@ public class PhosModule extends ReactContextBaseJavaModule{
                         @Override
                         public void onSuccess(Void data, Map<String, String> map) {
                             Log.d("Message ", String.valueOf("Test initialization successful, isInitialised: "+PhosSdk.getInstance().isInitialised()));
-                            //authenticateTest("phos", "2ac5040c-2ae7-49b9-a71e-9ace3528d69d", "V9SDK");
+                            authenticateTest("phos", "2ac5040c-2ae7-49b9-a71e-9ace3528d69d", "V9SDK");
                         }
                         @Override
                         public void onFailure(PhosException e, Map<String, String> map) {
@@ -144,8 +143,8 @@ public class PhosModule extends ReactContextBaseJavaModule{
                     PhosSdk.getInstance().authenticate(issuer, license, token, new AuthCallback(){
                         @Override
                         public void onSuccess(Void data, Map<String, String> map) {
-                            makeSaleWithAmountTest(10,true);
                             Log.d("Message ", String.valueOf("Authentication successful "+ ", isInitialised: "+PhosSdk.getInstance().isInitialised()+" "+ PhosSdk.getInstance().getClass()));
+                            //makeSaleTest(true);
                         }
                         @Override
                         public void onFailure(PhosException e, Map<String, String> map) {
@@ -239,7 +238,7 @@ public class PhosModule extends ReactContextBaseJavaModule{
                         //if(data!=null)res.putString("data", data.toString()); //Data type?
                         //if(map!=null)res.putString("map", map.toString()); //To ReadableMap
                         promise.resolve(res); //JSON
-
+                        authenticateTest("phos", "2ac5040c-2ae7-49b9-a71e-9ace3528d69d", "V9SDK");
                     }
                     @Override
                     public void onFailure(PhosException e, Map<String, String> map) {
