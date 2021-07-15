@@ -33,20 +33,22 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
   const [isChecked, setIsChecked] = useState(false)
   const { navigate } = useNavigation()
 
-  
+
 
   function onTapAuthenticate() {
     const state = store.getState();
     const phoneDebug = "+527799448853";
-    if(isChecked){
+    if (isChecked) {
       login();
-    } else{
+    } else {
       OnUserCheck(phoneDebug);
-      if(state.userReducer.user.success){
+      if (state.userReducer.user.success) {
         console.log(state.userReducer.user.success)
         setIsChecked(true);
         setTitle(!isChecked ? 'Check' : 'Login');
-      }    
+      } else {
+        Alert.alert("Error message", state.userReducer.user.message)
+      }
     }
   }
 
@@ -54,10 +56,15 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
     const state = store.getState();
     const codeDebug = "123456";
     OnUserLogin(codeDebug);
-    var token = state.userReducer.login.data.access_token as string | undefined;
-    console.log(state.userReducer)
-    OnCreateToken(state.userReducer.login.data.user.default_customer_id as string | undefined);
-    navigate('HomeStack');     
+    if (state.userReducer.login.success) {
+      var token = state.userReducer.login.data.access_token as string | undefined;
+      console.log(state.userReducer)
+      OnCreateToken(state.userReducer.login.data.user.default_customer_id as string | undefined);
+      navigate('HomeStack');
+    } else {
+      Alert.alert("Error message", state.userReducer.login.message)
+    }
+
   }
 
   return (
