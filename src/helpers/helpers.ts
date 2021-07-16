@@ -11,7 +11,7 @@ export function handleRes(r: any) {
   return result;
 }
 
-export function verofyFetch(method: string, end: string, raw: string, additional?:string) {
+export async function verofyFetch(method: string, end: string, raw: string, additional?: any) {
   const url = 'https://stg-main-service.verofy.com/api/v1/customer-portal' + end;
   var myHeaders = new Headers();
   myHeaders.append('Content-Type', 'application/json');
@@ -22,6 +22,10 @@ export function verofyFetch(method: string, end: string, raw: string, additional
   myHeaders.append('V2-Master-Request-ID', 'V9PHOS_CP2096247');
   myHeaders.append('V2-CTA-Api-Key', 'PKzp4x_huG6wbe-7+93-tHjdKKvu$n%_');
   myHeaders.append('V2-CTA-App-Version', '1.0');
+  /*if (additional.token) {
+    console.log(additional.token);
+    myHeaders.append('Authorization', 'Bearer ' + additional.token);
+  }*/
   const requestOptions = {
     method: method,
     headers: myHeaders,
@@ -29,9 +33,9 @@ export function verofyFetch(method: string, end: string, raw: string, additional
     redirect: 'follow'
   };
   //console.debug(url, requestOptions);
-  return fetchAsync(url, requestOptions)
+  return await fetchAsync(url, requestOptions)
     .then((data) => {
-      console.log("Fetch "+url)
+      console.log('Fetch ' + url);
       return data;
     })
     .catch((err) => console.log(err.message));
@@ -45,24 +49,22 @@ async function fetchAsync(url: string, opt: Object) {
 
 export const storeData = async (key: string, value: any) => {
   try {
-    if(typeof(value)=="object"){
-      const jsonValue = JSON.stringify(value)
+    if (typeof value == 'object') {
+      const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
-    } else
-    await AsyncStorage.setItem(key, value);
+    } else await AsyncStorage.setItem(key, value);
   } catch (e) {
     console.error(e);
   }
 };
 
-export const getData = async (key:string) => {
+export const getData = async (key: string) => {
   try {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
-      if(typeof(value)=="object"){
+      if (typeof value == 'object') {
         return value != null ? JSON.parse(value) : null;
-      } else
-      return value;
+      } else return value;
     }
   } catch (e) {
     console.error(e);

@@ -4,7 +4,7 @@ import { styles } from '../styles/styles';
 import {
   authenticate,
   makeSale,
-  init,
+  initAndAuthenticate,
   makeRefund,
   makeRefundWithAmount,
   makeSaleWithAmount,
@@ -29,20 +29,12 @@ export default class HomePage extends React.Component<Props, State> {
     return (
       <View style={styles.container}>
         <Text style={styles.h1}>V9phos</Text>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="amount"
-            keyboardType="numeric"
-          />
-          <Text style={styles.boldText}>£</Text>
-        </View>
         <View style={styles.container}>
           <View style={styles.debugButton}>
             <Button color="purple" onPress={isInitialised} title="IS INITIALISED" />
           </View>
           <View style={styles.debugButton}>
-            <Button color="#57F289" onPress={init} title="INIT" />
+            <Button color="#57F289" onPress={initAndAuthenticate} title="INIT" />
           </View>
         
           <View style={styles.debugButton}>

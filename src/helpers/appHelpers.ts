@@ -19,11 +19,10 @@ export async function isInitialised() {
   });
 }
 
-export async function init() {
+export async function initAndAuthenticate() {
   return await PhosModule.init()
     .then((r: any) => {
       console.warn(JSON.stringify(r));
-      //authenticate();
       return r;
     })
     .catch((err: any) => {

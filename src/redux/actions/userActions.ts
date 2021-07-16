@@ -3,6 +3,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { verofyCheck, verofyLogin } from '../../helpers/verofyHelpers';
 import { storeData, getData, verofyFetch } from '../../helpers/helpers';
 import { method, end } from '../../helpers/constants';
+import { store } from '../store';
+
 
 
 export interface UserErrorAction {
@@ -39,8 +41,6 @@ export const OnUserCheck = (phone: string) => {
     });
     try {
       const response = await verofyFetch(method.POST, end.userCheck, raw);
-      console.log(response)
-      storeData('LOGIN', phone);
       dispatch({
         type: 'ON_USER_CHECK',
         payload: response
@@ -56,7 +56,6 @@ export const OnUserCheck = (phone: string) => {
           payload: response
         });
       }
-      return response;
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
@@ -66,9 +65,8 @@ export const OnUserCheck = (phone: string) => {
   };
 };
 
-export const OnUserLogin = (code: string) => {
+export const OnUserLogin = (phone:string, code: string) => {
   return async (dispatch: Dispatch<UserAction>) => {
-    let phone = await getData('LOGIN');
     var raw = JSON.stringify({
       login: phone,
       password: code,
@@ -80,7 +78,6 @@ export const OnUserLogin = (code: string) => {
     });
     try {
       const response = await verofyFetch(method.POST, end.userLogin, raw);
-      //storeData('USER_DATA', response);
       dispatch({
         type: 'ON_USER_LOGIN',
         payload: response
@@ -96,7 +93,6 @@ export const OnUserLogin = (code: string) => {
           payload: response
         });
       }
-      return response;
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
@@ -108,9 +104,13 @@ export const OnUserLogin = (code: string) => {
 
 export const OnCreateToken = (customerID: string) => {
   return async (dispatch: Dispatch<UserAction>) => {
+    const state = store.getState();
+    const additional = {
+      token: state.userReducer.login.data.access_token
+    }
     var raw = JSON.stringify({});
     try {
-      const response = await verofyFetch(method.POST, end.createToken(customerID), raw);
+      const response = await verofyFetch(method.POST, end.createToken(customerID), raw, additional);
       storeData('PHOS_TOKEN', response);
       dispatch({
         type: 'ON_TOKEN_CREATED',
@@ -127,7 +127,6 @@ export const OnCreateToken = (customerID: string) => {
           payload: response
         });
       }
-      return response;
     } catch (error) {
       dispatch({
         type: 'ON_TOKEN_ERROR',

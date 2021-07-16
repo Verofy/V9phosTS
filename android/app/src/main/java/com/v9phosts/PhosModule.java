@@ -28,8 +28,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
-import digital.paynetics.phos.PhosSdk;
-import digital.paynetics.phos.PhosSdk;
+import digital.paynetics.*;
+/*import digital.paynetics.phos.PhosSdk;
 import digital.paynetics.phos.PhosSdkApplication;
 import digital.paynetics.phos.exceptions.PhosException;
 import digital.paynetics.phos.sdk.callback.AuthCallback;
@@ -41,6 +41,7 @@ import digital.paynetics.phos.sdk.entities.Transaction;
 import digital.paynetics.phos.sdk.entities.Transactions;
 import digital.paynetics.phos.sdk.enums.TransactionState;
 import digital.paynetics.phos.sdk.enums.TransactionType;
+import digital.paynetics.phos.PhosSdkApplication;*/
 
 public class PhosModule extends ReactContextBaseJavaModule{
 

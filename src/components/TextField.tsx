@@ -30,8 +30,7 @@ export const TextField: React.FC<TextFieldProps> = ({
       <TextInput
         placeholder={placeholder}
         placeholderTextColor='grey'
-        //keyboardType='phone-pad'
-        //placeholder="phone number"
+        keyboardType='phone-pad'
         autoCorrect={false}
         autoCapitalize="none"
         secureTextEntry={isPassword}

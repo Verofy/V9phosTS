@@ -17,7 +17,6 @@ interface LoginProps {
   OnUserCheck: Function;
   OnUserLogin: Function;
   OnCreateToken: Function;
-
   userReducer: UserState
 }
 
@@ -26,26 +25,30 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
 
   requestLocationPermission();
   requestPhoneStatePermission();
-
+  
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('')
   const [title, setTitle] = useState('LOGIN')
   const [isChecked, setIsChecked] = useState(false)
   const { navigate } = useNavigation()
+  const phoneDebug = "+527799448853";
+  const codeDebug = "123456";
+  const state = store.getState();
+  //navigate('HomeStack');
 
 
 
-  function onTapAuthenticate() {
-    const state = store.getState();
-    const phoneDebug = "+527799448853";
+
+
+  async function onTapAuthenticate() {
     if (isChecked) {
-      login();
+      await login();
     } else {
-      OnUserCheck(phoneDebug);
+      await OnUserCheck(phoneDebug);
+      console.log(state.userReducer.user.success)
       if (state.userReducer.user.success) {
-        console.log(state.userReducer.user.success)
         setIsChecked(true);
-        setTitle(!isChecked ? 'Check' : 'Login');
+        setTitle(!isChecked ? 'LOGIN' : 'SEND CODE');
       } else {
         Alert.alert("Error message", state.userReducer.user.message)
       }
@@ -53,13 +56,10 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
   }
 
   function login() {
-    const state = store.getState();
-    const codeDebug = "123456";
-    OnUserLogin(codeDebug);
+    OnUserLogin(phoneDebug, codeDebug);
     if (state.userReducer.login.success) {
-      var token = state.userReducer.login.data.access_token as string | undefined;
       console.log(state.userReducer)
-      OnCreateToken(state.userReducer.login.data.user.default_customer_id as string | undefined);
+      //OnCreateToken(state.userReducer.login.data.user.default_customer_id as string | undefined);
       navigate('HomeStack');
     } else {
       Alert.alert("Error message", state.userReducer.login.message)
@@ -83,7 +83,7 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
         </View>
         <View style={styles.container}>
           <ButtonWithTitle
-            title={!isChecked ? "Send code" : "Login"}
+            title={title}
             height={50}
             width={250}
             onTap={onTapAuthenticate}

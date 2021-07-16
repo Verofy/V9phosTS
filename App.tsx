@@ -10,6 +10,9 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 
 import { LoginScreen } from './src/screens/LoginScreen';
+//import { RefundScreen } from './src/screens/RefundScreen';
+import { PayScreen } from './src/screens/PayScreen';
+//import { VoidScreen } from './src/screens/VoidScreen';
 
 
 const switchNavigator = createSwitchNavigator({
@@ -36,9 +39,19 @@ const switchNavigator = createSwitchNavigator({
         }
       }),
     },
-    SecondPage: {
+   Pay: {
       screen: createStackNavigator({
-        SecondPage: HomeScreen //
+        Pay: PayScreen //
+      }),
+    },
+    Refund: {
+      screen: createStackNavigator({
+        Refund: PayScreen //
+      }),
+    },
+    Void: {
+      screen: createStackNavigator({
+        Void: PayScreen //
       }),
     },
   })
@@ -46,6 +59,7 @@ const switchNavigator = createSwitchNavigator({
 });
 
 
+//const AppNavigation = createAppContainer(switchNavigator);
 const AppNavigation = createAppContainer(switchNavigator);
 
 export default function App() {

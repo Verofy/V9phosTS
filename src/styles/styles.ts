@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
     padding: 10
   },
   inputContainer: {
+    flex:1,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row'

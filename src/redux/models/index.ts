@@ -16,8 +16,18 @@ export interface LoginModel {
   user: object;
 }
 
+
+export interface PayModel {
+  success: boolean;
+}
+
 export interface UserState {
   user: UserModel;
   login: LoginModel;
   error: string | undefined;
+}
+
+export interface PayState {
+  payment: PayModel;
+  error : string | undefined;
 }
