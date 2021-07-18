@@ -55,7 +55,8 @@ export const OnUserCheck = (phone: string) => {
           type: 'ON_USER_CHECK',
           payload: response
         });
-      }
+      };
+      return response;
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
@@ -92,7 +93,8 @@ export const OnUserLogin = (phone:string, code: string) => {
           type: 'ON_USER_LOGIN',
           payload: response
         });
-      }
+      };
+      return response;
     } catch (error) {
       dispatch({
         type: 'ON_USER_ERROR',
@@ -126,7 +128,8 @@ export const OnCreateToken = (customerID: string) => {
           type: 'ON_TOKEN_CREATED',
           payload: response
         });
-      }
+      }; 
+      return response
     } catch (error) {
       dispatch({
         type: 'ON_TOKEN_ERROR',

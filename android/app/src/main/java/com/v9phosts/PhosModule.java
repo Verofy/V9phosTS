@@ -219,7 +219,7 @@ public class PhosModule extends ReactContextBaseJavaModule{
         Log.d("Message ", "Sale processing with amount finished ");
     };
 
-    @ReactMethod void init(final Promise promise) throws InterruptedException {
+    @ReactMethod void initAndAuthenticate(String issuer, String token, String license,final Promise promise) {
         Log.d("Message ", String.valueOf("Initialization started "));
         ReactApplicationContext reactContext = getReactApplicationContext();
         Context applicationContext = getReactApplicationContext();
@@ -235,10 +235,19 @@ public class PhosModule extends ReactContextBaseJavaModule{
                         Log.d("Message ", String.valueOf("Initialization successful"));
                         res.putInt("status", 200);
                         res.putString("message", "SDK initialized");
-                        //if(data!=null)res.putString("data", data.toString()); //Data type?
-                        //if(map!=null)res.putString("map", map.toString()); //To ReadableMap
-                        promise.resolve(res); //JSON
-                        authenticateTest("phos", "2ac5040c-2ae7-49b9-a71e-9ace3528d69d", "V9SDK");
+                        PhosSdk.getInstance().authenticate(issuer, license, token, new AuthCallback(){
+                            @Override
+                            public void onSuccess(Void data, Map<String, String> map) {
+                                Log.d("Message ", String.valueOf("Authentication successful "+ data +" "+ map));
+                                res.putString("message", "Authentication successful");
+                                promise.resolve(res); //JSON
+                            }
+                            @Override
+                            public void onFailure(PhosException e, Map<String, String> map) {
+                                Log.d("Message ", String.valueOf("Authentication failed: "+ e));
+                                promise.reject(AUTH_ERROR, "Authentication error: "+e); //JSON
+                            }
+                        });
                     }
                     @Override
                     public void onFailure(PhosException e, Map<String, String> map) {
@@ -247,10 +256,8 @@ public class PhosModule extends ReactContextBaseJavaModule{
                 });
             }
         });
-        Thread.sleep(4000);
-        Log.d("Message ", String.valueOf("Initialization finished"));
     };
-    @ReactMethod void authenticate(String issuer, String token, String license, final Promise promise){
+    @ReactMethod void authenticateReact(String issuer, String token, String license, final Promise promise){
         Log.d("Message ", String.valueOf("Authentication started "));
         WritableMap res = new WritableNativeMap();
         ReactApplicationContext reactContext = getReactApplicationContext();

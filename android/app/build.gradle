@@ -125,7 +125,7 @@ task wrapper(type: Wrapper) {
 
 //PhosSDK repository
 repositories {
-    maven { url "https://phos.jfrog.io/artifactory/phos-sdk-dependencies"}
+    maven { url "https://repo.phos.dev/artifactory/phos-sdk-dependencies" }
 }
 
 
@@ -261,14 +261,10 @@ dependencies {
 
 
     //PhosSDK
-    //implementation files('libs/phos-sdk-staging-release.aar')
-    //debugImplementation files('libs/phos-sdk-mock.aar')
-    //debugImplementation files('libs/phos-sdk-stage-release_11122020.aar')
     debugImplementation files('libs/phos-sdk-stage-test.aar')
-    //debugImplementation files('libs/phos-sdk-staging-release.aar')
     releaseImplementation files('libs/phos-sdk-stage-release.aar')
     //releaseImplementation files('libs/phos-sdk-stage-release-playstore.aar')
-    implementation 'digital.paynetics.phos:sdk-dependencies:1.0.1'
+    implementation 'digital.paynetics.phos:sdk-dependencies:1.0.2'
     implementation 'com.bolyartech.forge.android:forge-android:10.0.0'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {

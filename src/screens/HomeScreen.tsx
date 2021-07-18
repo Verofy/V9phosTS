@@ -34,13 +34,6 @@ export default class HomePage extends React.Component<Props, State> {
             <Button color="purple" onPress={isInitialised} title="IS INITIALISED" />
           </View>
           <View style={styles.debugButton}>
-            <Button color="#57F289" onPress={initAndAuthenticate} title="INIT" />
-          </View>
-        
-          <View style={styles.debugButton}>
-            <Button color="lime" onPress={authenticate} title="AUTHENTICATE" />
-          </View>
-          <View style={styles.debugButton}>
             <Button color="navy" onPress={makeSale} title="PAY" />
           </View>
           <View style={styles.debugButton}>

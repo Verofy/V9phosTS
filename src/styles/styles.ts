@@ -26,7 +26,8 @@ export const styles = StyleSheet.create({
   },
   debugButton: {
     flex: 1,
-    width: 250
+    width: 250,
+    padding:20
   }
 });
 

@@ -22,10 +22,8 @@ export async function verofyFetch(method: string, end: string, raw: string, addi
   myHeaders.append('V2-Master-Request-ID', 'V9PHOS_CP2096247');
   myHeaders.append('V2-CTA-Api-Key', 'PKzp4x_huG6wbe-7+93-tHjdKKvu$n%_');
   myHeaders.append('V2-CTA-App-Version', '1.0');
-  /*if (additional.token) {
-    console.log(additional.token);
-    myHeaders.append('Authorization', 'Bearer ' + additional.token);
-  }*/
+  (additional)?myHeaders.append('Authorization', 'Bearer ' + additional.token):null
+
   const requestOptions = {
     method: method,
     headers: myHeaders,
@@ -35,7 +33,7 @@ export async function verofyFetch(method: string, end: string, raw: string, addi
   //console.debug(url, requestOptions);
   return await fetchAsync(url, requestOptions)
     .then((data) => {
-      console.log('Fetch ' + url);
+      console.debug('Fetch ' + url);
       return data;
     })
     .catch((err) => console.log(err.message));

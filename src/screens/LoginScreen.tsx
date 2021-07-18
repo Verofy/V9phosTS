@@ -5,10 +5,9 @@ import { connect } from 'react-redux';
 import { UserState } from '../redux/models';
 import { ApplicationState } from '../redux/reducers';
 import { OnUserCheck, OnUserLogin, OnCreateToken } from '../redux/actions/userActions';
-import { verofyCheck } from '../helpers/verofyHelpers';
-import { styles, debug, button } from '../styles/styles';
+import { styles, debug } from '../styles/styles';
 import { ButtonWithTitle } from '../components/ButtonWithTitle';
-import { store } from '../redux/store';
+//import { store } from '../redux/store';
 import { useNavigation } from '../utils/useNavigation';
 import { requestLocationPermission, requestPhoneStatePermission } from '../components/AskPermissions';
 
@@ -17,14 +16,18 @@ interface LoginProps {
   OnUserCheck: Function;
   OnUserLogin: Function;
   OnCreateToken: Function;
-  userReducer: UserState
+  userReducer: UserState;
+}
+
+function requestPermissions(){
+  requestLocationPermission();
+  requestPhoneStatePermission();
 }
 
 
 const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreateToken, userReducer }) => {
 
-  requestLocationPermission();
-  requestPhoneStatePermission();
+  requestPermissions();
   
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('')
@@ -33,38 +36,39 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
   const { navigate } = useNavigation()
   const phoneDebug = "+527799448853";
   const codeDebug = "123456";
-  const state = store.getState();
+  //const state = store.getState();
   //navigate('HomeStack');
 
-
-
-
-
-  async function onTapAuthenticate() {
+  function onTapAuthenticate() {
     if (isChecked) {
-      await login();
-    } else {
-      await OnUserCheck(phoneDebug);
-      console.log(state.userReducer.user.success)
-      if (state.userReducer.user.success) {
-        setIsChecked(true);
-        setTitle(!isChecked ? 'LOGIN' : 'SEND CODE');
-      } else {
-        Alert.alert("Error message", state.userReducer.user.message)
-      }
+      login();
+    } else { try{
+      OnUserCheck(phoneDebug).then((val:any)=>{
+        if (val.status=="OK") {
+          setIsChecked(true);
+          setTitle(!isChecked ? 'LOGIN' : 'SEND CODE');
+        } else {
+          Alert.alert("Error message", val.message)
+        }
+      }).catch((e:any)=>{console.error(e)})
+     
+    }catch(e){
+      console.error(e)
     }
+    } 
+     
   }
 
   function login() {
-    OnUserLogin(phoneDebug, codeDebug);
-    if (state.userReducer.login.success) {
-      console.log(state.userReducer)
-      //OnCreateToken(state.userReducer.login.data.user.default_customer_id as string | undefined);
-      navigate('HomeStack');
-    } else {
-      Alert.alert("Error message", state.userReducer.login.message)
-    }
-
+    OnUserLogin(phoneDebug, codeDebug).then((val:any)=>{
+      if (val.success) {
+        console.log(val)
+        OnCreateToken(val.data.default_customer.id as string | undefined);
+        navigate('HomeStack');
+      } else {
+        Alert.alert("Error message", val.message)
+      }
+    }).catch((e:any)=>{console.error(e)})
   }
 
   return (

@@ -10,9 +10,10 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { createBottomTabNavigator } from 'react-navigation-tabs'
 
 import { LoginScreen } from './src/screens/LoginScreen';
-//import { RefundScreen } from './src/screens/RefundScreen';
+import { RefundScreen } from './src/screens/RefundScreen';
 import { PayScreen } from './src/screens/PayScreen';
-//import { VoidScreen } from './src/screens/VoidScreen';
+import { VoidScreen } from './src/screens/VoidScreen';
+import { PayWithAmountScreen } from './src/screens/PayWithAmount';
 
 
 const switchNavigator = createSwitchNavigator({
@@ -32,26 +33,26 @@ const switchNavigator = createSwitchNavigator({
   HomeStack: createBottomTabNavigator({
     Home: {
       screen: createStackNavigator({
-        HomePage: HomeScreen,
+        HomePage: PayScreen,
       }, {
         defaultNavigationOptions: {
           headerShown: false
         }
       }),
     },
-   Pay: {
+    PayWithAmount: {
       screen: createStackNavigator({
-        Pay: PayScreen //
+        PayWithAmount: PayWithAmountScreen //
       }),
     },
     Refund: {
       screen: createStackNavigator({
-        Refund: PayScreen //
+        Refund: RefundScreen //
       }),
     },
     Void: {
       screen: createStackNavigator({
-        Void: PayScreen //
+        Void: VoidScreen //
       }),
     },
   })
