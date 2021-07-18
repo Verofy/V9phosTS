@@ -38,12 +38,12 @@ const _PayScreen: React.FC<PayProps> = ({ userReducer, payReducer }) => {
   const [token, setToken] = useState('');
 
   async function getPhosToken() {
-    if(token==''){
+    if (token == '') {
       const token = await getData("PHOS_TOKEN").then(JSON.parse)
-      .then((val) => { return val.data.token })
-      .catch((e) => { console.error(e) })
-    console.log(token)
-    setToken(token);
+        .then((val) => { return val.data.token })
+        .catch((e) => { console.error(e) })
+      console.log(token)
+      setToken(token);
     }
   }
   getPhosToken();
@@ -60,11 +60,11 @@ const _PayScreen: React.FC<PayProps> = ({ userReducer, payReducer }) => {
           <Text style={styles.boldText}>License: {license}</Text>
           <Text style={styles.boldText}>Token: {token}</Text>
           <View style={styles.debugButton}>
-          <ButtonWithTitle
+            <ButtonWithTitle
               title="PAY"
               height={50}
               width={250}
-              onTap={()=>onPay(issuer,token,license)}
+              onTap={() => onPay(issuer, token, license)}
             />
           </View>
         </View>

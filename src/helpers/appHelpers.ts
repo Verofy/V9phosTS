@@ -30,22 +30,21 @@ async function init() {
   }
 }
 export async function initAndAuthenticate(issuer: string, token: string, license: string) {
-  console.log(issuer, token, license)
+  console.log(issuer, token, license);
   if (init()) {
-    try{
+    try {
       return await PhosModule.initAndAuthenticate(issuer, token, license)
-      .then((r: any) => {
-        console.log('Initialised and Authenticated', JSON.stringify(r));
-        return r;
-      })
-      .catch((err: any) => {
-        Alert.alert('Error', JSON.stringify(err));
-      });
-  } catch (e){
-    Alert.alert("Authentification was not successful")
-  }
+        .then((r: any) => {
+          console.log('Initialised and Authenticated', JSON.stringify(r));
+          return r;
+        })
+        .catch((err: any) => {
+          Alert.alert('Error', JSON.stringify(err));
+        });
+    } catch (e) {
+      Alert.alert('Authentification was not successful');
     }
-   
+  }
 }
 
 export function initTest() {

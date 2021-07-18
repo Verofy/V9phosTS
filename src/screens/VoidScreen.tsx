@@ -20,7 +20,7 @@ interface VoidProps {
   userReducer: UserState
 }
 
-async function voidPayment(transaction: string, issuer:string, token:string, license:string) {
+async function voidPayment(transaction: string, issuer: string, token: string, license: string) {
   Alert.alert("void called")
   await initAndAuthenticate(issuer, token, license);
   try {
@@ -38,12 +38,12 @@ const _VoidScreen: React.FC<VoidProps> = ({ userReducer, payReducer }) => {
   const [token, setToken] = useState('');
 
   async function getPhosToken() {
-    if(token==undefined){
+    if (token == undefined) {
       const token = await getData("PHOS_TOKEN").then(JSON.parse)
-      .then((val) => { return val.data.token })
-      .catch((e) => { console.error(e) })
-    console.log(token)
-    setToken(token);
+        .then((val) => { return val.data.token })
+        .catch((e) => { console.error(e) })
+      console.log(token)
+      setToken(token);
     }
   }
   return (
@@ -53,15 +53,15 @@ const _VoidScreen: React.FC<VoidProps> = ({ userReducer, payReducer }) => {
           <Text style={styles.h1}>Void payment page</Text>
         </View>
         <View style={styles.container}>
-        <View style={debug.inputSection}>
-          <TextField
-            placeholder="transaction key"
-            onTextChange={setTransaction}
-            isSecure={false}
-          />
-        </View>
+          <View style={debug.inputSection}>
+            <TextField
+              placeholder="transaction key"
+              onTextChange={setTransaction}
+              isSecure={false}
+            />
+          </View>
           <View style={styles.debugButton}>
-             <ButtonWithTitle
+            <ButtonWithTitle
               title="VOID PAYMENT"
               height={50}
               width={250}

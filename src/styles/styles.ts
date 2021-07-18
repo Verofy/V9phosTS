@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     padding: 10
   },
   inputContainer: {
-    flex:1,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row'
@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   debugButton: {
     flex: 1,
     width: 250,
-    padding:20
+    padding: 20
   }
 });
 
@@ -42,7 +42,7 @@ export const textField = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    margin:15
+    margin: 15
   },
   textField: {
     flex: 1,

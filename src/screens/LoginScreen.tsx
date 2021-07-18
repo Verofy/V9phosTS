@@ -19,7 +19,7 @@ interface LoginProps {
   userReducer: UserState;
 }
 
-function requestPermissions(){
+function requestPermissions() {
   requestLocationPermission();
   requestPhoneStatePermission();
 }
@@ -28,7 +28,7 @@ function requestPermissions(){
 const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreateToken, userReducer }) => {
 
   requestPermissions();
-  
+
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('')
   const [title, setTitle] = useState('LOGIN')
@@ -42,25 +42,26 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
   function onTapAuthenticate() {
     if (isChecked) {
       login();
-    } else { try{
-      OnUserCheck(phoneDebug).then((val:any)=>{
-        if (val.status=="OK") {
-          setIsChecked(true);
-          setTitle(!isChecked ? 'LOGIN' : 'SEND CODE');
-        } else {
-          Alert.alert("Error message", val.message)
-        }
-      }).catch((e:any)=>{console.error(e)})
-     
-    }catch(e){
-      console.error(e)
+    } else {
+      try {
+        OnUserCheck(phone).then((val: any) => {
+          if (val.status == "OK") {
+            setIsChecked(true);
+            setTitle(!isChecked ? 'LOGIN' : 'SEND CODE');
+          } else {
+            Alert.alert("Error message", val.message)
+          }
+        }).catch((e: any) => { console.error(e) })
+
+      } catch (e) {
+        console.error(e)
+      }
     }
-    } 
-     
+
   }
 
   function login() {
-    OnUserLogin(phoneDebug, codeDebug).then((val:any)=>{
+    OnUserLogin(phone, code).then((val: any) => {
       if (val.success) {
         console.log(val)
         OnCreateToken(val.data.default_customer.id as string | undefined);
@@ -68,14 +69,14 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
       } else {
         Alert.alert("Error message", val.message)
       }
-    }).catch((e:any)=>{console.error(e)})
+    }).catch((e: any) => { console.error(e) })
   }
 
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView>
         <View style={styles.container}>
-          <Text style={styles.h1}>V9-phos</Text>
+          <Text style={styles.h1}>V9 Phos</Text>
         </View>
         <View style={debug.inputSection}>
           <TextField

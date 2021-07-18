@@ -41,12 +41,12 @@ const _PayWithAmountScreen: React.FC<PayWithAmountProps> = ({ userReducer, payRe
   const [token, setToken] = useState('');
 
   async function getPhosToken() {
-    if(token==''){
+    if (token == '') {
       const token = await getData("PHOS_TOKEN").then(JSON.parse)
-      .then((val) => { return val.data.token })
-      .catch((e) => { console.error(e) })
-    console.log(token)
-    setToken(token);
+        .then((val) => { return val.data.token })
+        .catch((e) => { console.error(e) })
+      console.log(token)
+      setToken(token);
     }
   }
 
