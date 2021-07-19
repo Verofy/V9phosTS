@@ -14,6 +14,8 @@ import { RefundScreen } from './src/screens/RefundScreen';
 import { PayScreen } from './src/screens/PayScreen';
 import { VoidScreen } from './src/screens/VoidScreen';
 import { PayWithAmountScreen } from './src/screens/PayWithAmount';
+import { TransactionsScreen } from './src/screens/Transactions';
+import HomePage from './src/screens/HomeScreen';
 
 
 const switchNavigator = createSwitchNavigator({
@@ -31,9 +33,9 @@ const switchNavigator = createSwitchNavigator({
   },
 
   HomeStack: createBottomTabNavigator({
-    Home: {
+    Pay: {
       screen: createStackNavigator({
-        HomePage: PayScreen,
+        Pay: PayScreen,
       }, {
         defaultNavigationOptions: {
           headerShown: false
@@ -43,16 +45,42 @@ const switchNavigator = createSwitchNavigator({
     PayWithAmount: {
       screen: createStackNavigator({
         PayWithAmount: PayWithAmountScreen //
+      }, {
+        defaultNavigationOptions: {
+          headerShown: false
+        }
       }),
     },
     Refund: {
       screen: createStackNavigator({
         Refund: RefundScreen //
+      }, {
+        defaultNavigationOptions: {
+          headerShown: false
+        }
       }),
     },
     Void: {
       screen: createStackNavigator({
         Void: VoidScreen //
+      }, {
+        defaultNavigationOptions: {
+          headerShown: false
+        }
+      }),
+    },
+    Transactions: {
+      screen: createStackNavigator({
+        Transactions: TransactionsScreen //
+      }, {
+        defaultNavigationOptions: {
+          headerShown: false
+        }
+      }),
+    },
+    HomePage: {
+      screen: createStackNavigator({
+        HomePage: HomePage //
       }),
     },
   })

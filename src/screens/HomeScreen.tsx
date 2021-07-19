@@ -2,7 +2,6 @@ import React from 'react';
 import { Text, View, TextInput, Button } from 'react-native';
 import { styles } from '../styles/styles';
 import {
-  authenticate,
   makeSale,
   initAndAuthenticate,
   makeRefund,
@@ -12,70 +11,37 @@ import {
   getTransactionHistory,
   getTransactionByTrKey,
   initTest,
-  isInitialised
+  isInitialised,
+  isInitialisedAlert
 } from '../helpers/appHelpers';
 
 export interface Props { }
 
 interface State { }
 
-export default class HomePage extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {};
-  }
+export default class PhosDebugRoom extends React.Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.h1}>V9phos</Text>
+        <Text style={styles.h1}>Phos Module Debug Room</Text>
         <View style={styles.container}>
           <View style={styles.debugButton}>
-            <Button color="purple" onPress={isInitialised} title="IS INITIALISED" />
+            <Button color="purple" onPress={isInitialisedAlert} title="IS INITIALISED" />
           </View>
           <View style={styles.debugButton}>
             <Button color="navy" onPress={makeSale} title="PAY" />
           </View>
           <View style={styles.debugButton}>
             <Button
-              color="#6289FF"
+              color="green"
               onPress={() => {
-                makeSaleWithAmount(50);
+                initAndAuthenticate("phos","d96018d6-d7a1-44cd-9d63-c20c7a1d87e8", "V9SDK")
               }}
-              title="MAKE SALE WITH AMOUNT 50"
+              title="INITIALIZE AND AUTHENTICATE"
             />
           </View>
           <View style={styles.debugButton}>
-            <Button color="red" onPress={makeRefund} title="REFUND" />
-          </View>
-          <View style={styles.debugButton}>
-            <Button
-              color="#F19CB2"
-              onPress={() => {
-                makeRefundWithAmount(50);
-              }}
-              title="REFUND WITH AMOUNT 50"
-            />
-          </View>
-          <View style={styles.debugButton}>
-            <Button color="#f72c49" onPress={makeVoid} title="VOID" />
-          </View>
-          <View style={styles.debugButton}>
-            <Button
-              color="yellow"
-              onPress={getTransactionHistory}
-              title="TRANSACTION HISTORY"
-            />
-          </View>
-          <View style={styles.debugButton}>
-            <Button
-              color="orange"
-              onPress={getTransactionByTrKey}
-              title="TRANSACTION HISTORY WITH KEY"
-            />
-          </View>
-          <View style={styles.debugButton}>
-            <Button color="black" onPress={initTest} title="TEST" />
+            <Button color="black" onPress={initTest} title="TEST INIT" />
           </View>
         </View>
       </View>

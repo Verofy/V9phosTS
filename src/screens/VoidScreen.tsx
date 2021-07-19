@@ -21,7 +21,6 @@ interface VoidProps {
 }
 
 async function voidPayment(transaction: string, issuer: string, token: string, license: string) {
-  Alert.alert("void called")
   await initAndAuthenticate(issuer, token, license);
   try {
     await makeVoid(transaction);

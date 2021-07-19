@@ -261,7 +261,8 @@ dependencies {
 
 
     //PhosSDK
-    debugImplementation files('libs/phos-sdk-stage-test.aar')
+    //debugImplementation files('libs/phos-sdk-stage-test.aar')
+    debugImplementation files('libs/phos-sdk-stage-release.aar')
     releaseImplementation files('libs/phos-sdk-stage-release.aar')
     //releaseImplementation files('libs/phos-sdk-stage-release-playstore.aar')
     implementation 'digital.paynetics.phos:sdk-dependencies:1.0.2'

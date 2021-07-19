@@ -1,8 +1,8 @@
 import PhosModule from '../components/PhosModule';
-import { handleValue, handleRes, getData } from './helpers';
+import {handleValue, handleRes, getData} from './helpers';
 import React from 'react';
-import { Alert } from 'react-native';
-import { store } from '../redux';
+import {Alert} from 'react-native';
+import {store} from '../redux';
 const showTransactionResult = true;
 const disablePrompt = true;
 const state = store.getState();
@@ -20,9 +20,18 @@ export async function isInitialised() {
       console.log(err);
     });
 }
+
+export async function isInitialisedAlert() {
+  return await PhosModule.isInitialised()
+    .then((r: any) => {
+      Alert.alert('Module is initialised: ' + r);
+    })
+    .catch((err: any) => {
+      Alert.alert(err)
+    });
+}
 async function init() {
   const init = await isInitialised();
-  console.log('init', init);
   if (init == 'true') {
     return true;
   } else {
@@ -30,20 +39,17 @@ async function init() {
   }
 }
 export async function initAndAuthenticate(issuer: string, token: string, license: string) {
-  console.log(issuer, token, license);
-  if (init()) {
-    try {
-      return await PhosModule.initAndAuthenticate(issuer, token, license)
-        .then((r: any) => {
-          console.log('Initialised and Authenticated', JSON.stringify(r));
-          return r;
-        })
-        .catch((err: any) => {
-          Alert.alert('Error', JSON.stringify(err));
-        });
-    } catch (e) {
-      Alert.alert('Authentification was not successful');
-    }
+  const init = await isInitialised();
+  if (init == 'false') {
+    console.log('initializing...');
+    return await PhosModule.initAndAuthenticate(issuer, token, license)
+      .then((r: any) => {
+        console.log('Initialised and Authenticated', JSON.stringify(r));
+        return r;
+      })
+      .catch((err: any) => {
+        Alert.alert('Error', JSON.stringify(err));
+      });
   }
 }
 
@@ -98,7 +104,7 @@ export async function makeSaleWithAmount(amount: any) {
 }
 
 export async function makeRefund(transaction: string) {
-  //const transaction = 'MOCK+TRANSACTION+KEY';
+  //const transaction = '45c47643a106882667edb66baa869b04';
   if (init()) {
     return await PhosModule.makeRefundExtras(transaction, showTransactionResult, disablePrompt)
       .then((r: any) => {
@@ -125,8 +131,8 @@ export async function makeRefundWithAmount(amount: number) {
     });
 }
 
-export async function makeVoid(transaction: string) {
-  //const transaction = 'MOCK+TRANSACTION+KEY';
+export async function makeVoid(transaction:string) {
+  //const transaction = 'f7f7286cf70f11f4f3cd7921b47e95b4';
   if (init()) {
     return await PhosModule.makeVoidExtras(transaction, showTransactionResult, disablePrompt)
       .then((r: any) => {
@@ -144,17 +150,19 @@ export async function makeVoid(transaction: string) {
 export async function getTransactionHistory() {
   const page = 1;
   const limit = 50;
-  const date = '07/11/2021';
+  const date = '01/05/2021';
   const type = 'sale'; //sale, void, refund
   const state = 'successful'; //successful, failed, pending, unkwnon
-  return await PhosModule.getTransactionHistory(page, limit, date, type, state)
-    .then((r: any) => {
-      console.info(r.message);
-      Alert.alert('Transaction history', JSON.stringify(r));
-    })
-    .catch((err: any) => {
-      Alert.alert('Error', JSON.stringify(err));
-    });
+  if (init()) {
+    return await PhosModule.getTransactionHistory(page, limit, date, type, state)
+      .then((r: any) => {
+        return r;
+        //Alert.alert('Transaction history', JSON.stringify(r));
+      })
+      .catch((err: any) => {
+        Alert.alert('Error', JSON.stringify(err));
+      });
+  }
 }
 
 export async function getTransactionByTrKey() {

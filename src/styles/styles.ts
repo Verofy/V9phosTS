@@ -24,6 +24,10 @@ export const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold'
   },
+  transaction: {
+    //fontWeight: 'bold',
+    padding :10
+  },
   debugButton: {
     flex: 1,
     width: 250,

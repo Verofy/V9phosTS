@@ -21,12 +21,15 @@ interface PayProps {
 }
 
 async function onPay(issuer: string, token: string, license: string) {
-  await initAndAuthenticate(issuer, token, license);
-  try {
-    await makeSale();
-  } catch (e) {
-    Alert.alert(e)
-  }
+  console.log(token)
+  if(token!==undefined){
+    await initAndAuthenticate(issuer, token, license);
+    try {
+      await makeSale();
+    } catch (e) {
+      Alert.alert(e)
+    }
+  } 
 }
 
 
@@ -35,7 +38,7 @@ const _PayScreen: React.FC<PayProps> = ({ userReducer, payReducer }) => {
   const state = store.getState();
   const [issuer, setIssuer] = useState('phos');
   const [license, setLicense] = useState('V9SDK');
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState('a1503ef7-c32c-40ad-850e-9c183a656724');
 
   async function getPhosToken() {
     if (token == '') {

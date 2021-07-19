@@ -19,9 +19,9 @@ interface LoginProps {
   userReducer: UserState;
 }
 
-function requestPermissions() {
-  requestLocationPermission();
-  requestPhoneStatePermission();
+async function requestPermissions() {
+  await requestLocationPermission() 
+  requestPhoneStatePermission()
 }
 
 
@@ -34,8 +34,8 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
   const [title, setTitle] = useState('LOGIN')
   const [isChecked, setIsChecked] = useState(false)
   const { navigate } = useNavigation()
-  const phoneDebug = "+527799448853";
-  const codeDebug = "123456";
+  //const phoneDebug = "+527799448853";
+  //const codeDebug = "123456";
   //const state = store.getState();
   //navigate('HomeStack');
 

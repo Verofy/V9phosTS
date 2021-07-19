@@ -22,21 +22,21 @@ export async function verofyFetch(method: string, end: string, raw: string, addi
   myHeaders.append('V2-Master-Request-ID', 'V9PHOS_CP2096247');
   myHeaders.append('V2-CTA-Api-Key', 'PKzp4x_huG6wbe-7+93-tHjdKKvu$n%_');
   myHeaders.append('V2-CTA-App-Version', '1.0');
-  (additional)?myHeaders.append('Authorization', 'Bearer ' + additional.token):null
+  additional ? myHeaders.append('Authorization', 'Bearer ' + additional.token) : null;
 
   const requestOptions = {
     method: method,
     headers: myHeaders,
     body: raw,
-    redirect: 'follow'
+    redirect: 'follow',
   };
   //console.debug(url, requestOptions);
   return await fetchAsync(url, requestOptions)
-    .then((data) => {
+    .then(data => {
       console.debug('Fetch ' + url);
       return data;
     })
-    .catch((err) => console.log(err.message));
+    .catch(err => console.log(err.message));
 }
 
 async function fetchAsync(url: string, opt: Object) {

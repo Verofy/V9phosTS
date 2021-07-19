@@ -11,9 +11,12 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.google.gson.Gson;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -231,26 +234,26 @@ public class PhosModule extends ReactContextBaseJavaModule{
             public void run() {
                 PhosSdk.getInstance().init(reactContext.getApplicationContext(), new InitCallback() {
                     @Override
-                    public void onSuccess(Void data, Map<String, String> map) {
+                    public void onSuccess(Void data, @Nullable Map<String, String> map) {
                         Log.d("Message ", String.valueOf("Initialization successful"));
                         res.putInt("status", 200);
                         res.putString("message", "SDK initialized");
                         PhosSdk.getInstance().authenticate(issuer, license, token, new AuthCallback(){
                             @Override
-                            public void onSuccess(Void data, Map<String, String> map) {
+                            public void onSuccess(Void data, @Nullable Map<String, String> map) {
                                 Log.d("Message ", String.valueOf("Authentication successful "+ data +" "+ map));
                                 res.putString("message", "Authentication successful");
                                 promise.resolve(res); //JSON
                             }
                             @Override
-                            public void onFailure(PhosException e, Map<String, String> map) {
+                            public void onFailure(PhosException e, @Nullable Map<String, String> map) {
                                 Log.d("Message ", String.valueOf("Authentication failed: "+ e));
                                 promise.reject(AUTH_ERROR, "Authentication error: "+e); //JSON
                             }
                         });
                     }
                     @Override
-                    public void onFailure(PhosException e, Map<String, String> map) {
+                    public void onFailure(PhosException e, @Nullable Map<String, String> map) {
                         promise.reject(INIT_ERROR, "Initialization error"); //JSON
                     }
                 });
@@ -367,26 +370,38 @@ public class PhosModule extends ReactContextBaseJavaModule{
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PhosSdk.getInstance().makeRefund(currentActivity, transaction, showTransactionResult, extras, disablePrompt, new TransactionCallback() {
+                PhosSdk.getInstance().getTransactionByTrKey(transactionKey, new TransactionCallback() {
                     @Override
-                    public void onSuccess(Transaction transaction, @Nullable Map<String, String> extras) {
-                        Log.d("Message", String.valueOf("Refund successful "+transaction+" "+transaction));
-                        res.putInt("status", 200);
-                        res.putString("message", "Refund successful");
-                        //if(transaction!=null)res.putString("transaction_key", transaction);
-                        //if(transaction!=null)res.putString("map", transaction.toString());
-                        promise.resolve(res); //JSON
-                        //Refund successful
-                        //data is transaction key
-                        //extras is the Map passed in makeRefund()
+                    public void onSuccess(Transaction transaction, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                        PhosSdk.getInstance().makeRefund(currentActivity, transaction, showTransactionResult, extras, disablePrompt, new TransactionCallback() {
+                            @Override
+                            public void onSuccess(Transaction transaction, @Nullable Map<String, String> extras) {
+                                Log.d("Message", String.valueOf("Refund successful "+transaction+" "+transaction));
+                                res.putInt("status", 200);
+                                res.putString("message", "Refund successful");
+                                //if(transaction!=null)res.putString("transaction_key", transaction);
+                                //if(transaction!=null)res.putString("map", transaction.toString());
+                                promise.resolve(res); //JSON
+                                //Refund successful
+                                //data is transaction key
+                                //extras is the Map passed in makeRefund()
+                            }
+                            @Override
+                            public void onFailure(@Nullable Transaction transaction, PhosException error, @Nullable Map<String, String> extras) {
+                                Log.d("Message", String.valueOf("Refund failed "+error));
+                                promise.reject(REFUND_ERROR, "Refund error: "+error); //JSON
+                                //Refund failed
+                            }
+                        });
                     }
+
                     @Override
-                    public void onFailure(@Nullable Transaction transaction, PhosException error, @Nullable Map<String, String> extras) {
-                        Log.d("Message", String.valueOf("Refund failed "+error));
-                        promise.reject(REFUND_ERROR, "Refund error: "+error); //JSON
-                        //Refund failed
+                    public void onFailure(@Nullable @org.jetbrains.annotations.Nullable Transaction transaction, PhosException e, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
+                        Log.d("Message", String.valueOf("Getting transaction failed "+e));
+                        promise.reject(REFUND_ERROR, "Getting transaction error: "+e); //JSON
                     }
                 });
+
             }
         });
     };
@@ -468,19 +483,22 @@ public class PhosModule extends ReactContextBaseJavaModule{
         Log.d("Filter transactions by type:", String.valueOf(transactionType));
         Log.d("Filter transactions by state:", String.valueOf(transactionState));
         WritableMap res = new WritableNativeMap();
+        WritableMap transactions = new WritableNativeMap();
         ReactApplicationContext reactContext = getReactApplicationContext();
         Handler handler = new Handler(reactContext.getMainLooper());
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PhosSdk.getInstance().getTransactionHistory(page, limit, filterDate, transactionType, transactionState, new TransactionListCallback() {
+                PhosSdk.getInstance().getTransactionHistory(page, limit, null, transactionType, transactionState, new TransactionListCallback() {
                     @Override
                     public void onSuccess(Transactions data, @Nullable @org.jetbrains.annotations.Nullable Map<String, String> map) {
                         Log.d("Message", String.valueOf(data.getItems()));
+                        String json = new Gson().toJson(data.getItems());
+                        Log.d("JSON", String.valueOf(json));
+
                         res.putInt("status", 200);
                         res.putString("message", "Getting transaction history was successful");
-                        res.putString("transaction_history", data.getItems().toString());
-                        if(map!=null)res.putString("map", map.toString()); //To ReadableMap
+                        res.putString("transaction_history", json);
                         promise.resolve(res); //JSON
                     }
                     @Override
