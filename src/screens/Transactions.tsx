@@ -87,7 +87,7 @@ const _TransactionsScreen: React.FC<TransactionsProps> = ({ payReducer }) => {
           <Text style={styles.boldText}>Token: {token}</Text>
           <ScrollView>
             {transactions.map((transactions, index) => (
-              <TouchableHighlight onPress={() => copyIt(transactions)}>
+              <TouchableHighlight onPress={() => copyIt(transactions)} key={transactions.transaction_key}>
                 <Text style={styles.transaction}>{transactions.transaction_key}, amount: £{transactions.amount}</Text>
               </TouchableHighlight>
 
