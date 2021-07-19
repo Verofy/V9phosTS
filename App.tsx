@@ -1,7 +1,7 @@
 import React from 'react';
 import { styles, navigationStyles } from './src/styles/styles';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import HomeScreen from './src/screens/HomeScreen';
+import HomeScreen from './src/screens/PhosDebugRoom';
 import { Provider } from 'react-redux'
 import { store } from './src/redux'
 
@@ -15,7 +15,7 @@ import { PayScreen } from './src/screens/PayScreen';
 import { VoidScreen } from './src/screens/VoidScreen';
 import { PayWithAmountScreen } from './src/screens/PayWithAmount';
 import { TransactionsScreen } from './src/screens/Transactions';
-import HomePage from './src/screens/HomeScreen';
+import HomePage from './src/screens/PhosDebugRoom';
 
 
 const switchNavigator = createSwitchNavigator({
@@ -78,11 +78,15 @@ const switchNavigator = createSwitchNavigator({
         }
       }),
     },
-    HomePage: {
+    /*HomePage: {
       screen: createStackNavigator({
         HomePage: HomePage //
+      }, {
+        defaultNavigationOptions: {
+          headerShown: false
+        }
       }),
-    },
+    },*/
   })
 
 });
