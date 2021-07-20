@@ -5,5 +5,37 @@
         <!-- Customize your theme here. -->
         <item name="android:textColor">#000000</item>
     </style>
+    <style name="PriceButton" parent="PhosButton">
+        <item name="android:background">#97B424</item>
+        <item name="android:backgroundTint">#0F1203</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginStart">9dp</item>
+        <item name="android:layout_marginEnd">9dp</item>
+        <item name="android:textSize">@dimen/txtNumericButtonSize</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:elevation">2dp</item>
+        <item name="android:translationZ">2dp</item>
+        <item name="android:layout_weight">10</item>
+    </style>
 
+    <style name="vg_present_card">
+        <item name="android:background">#DA0B9E</item>
+        <item name="android:textColor">@color/blue</item>
+    </style>
+
+    <style name="tv_company_name">
+        <item name="android:background">#DA0B36</item>
+        <item name="android:textColor">@color/yellow</item>
+    </style>
+
+    <style name="btnBack">
+        <item name="android:background">#0B36DA</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <color name="loading_indicator">@color/black</color>
+    <style name="Loading" parent="SpinKitView.ThreeBounce"/>
 </resources>

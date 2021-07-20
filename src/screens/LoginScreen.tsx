@@ -34,8 +34,8 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
   const [title, setTitle] = useState('LOGIN')
   const [isChecked, setIsChecked] = useState(false)
   const { navigate } = useNavigation()
-  //const phoneDebug = "+527799448853";
-  //const codeDebug = "123456";
+  const phoneDebug = "+527799448853";
+  const codeDebug = "123456";
   //const state = store.getState();
   //navigate('HomeStack');
 
@@ -44,7 +44,7 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
       login();
     } else {
       try {
-        OnUserCheck(phone).then((val: any) => {
+        OnUserCheck(phoneDebug).then((val: any) => {
           if (val.status == "OK") {
             setIsChecked(true);
             setTitle(!isChecked ? 'LOGIN' : 'SEND CODE');
@@ -61,7 +61,7 @@ const _LoginScreen: React.FC<LoginProps> = ({ OnUserLogin, OnUserCheck, OnCreate
   }
 
   function login() {
-    OnUserLogin(phone, code).then((val: any) => {
+    OnUserLogin(phoneDebug, codeDebug).then((val: any) => {
       if (val.success) {
         console.log(val)
         OnCreateToken(val.data.default_customer.id as string | undefined);

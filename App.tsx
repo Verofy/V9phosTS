@@ -15,7 +15,7 @@ import { PayScreen } from './src/screens/PayScreen';
 import { VoidScreen } from './src/screens/VoidScreen';
 import { PayWithAmountScreen } from './src/screens/PayWithAmount';
 import { TransactionsScreen } from './src/screens/Transactions';
-import HomePage from './src/screens/PhosDebugRoom';
+import PhosDebugRoom from './src/screens/PhosDebugRoom';
 
 
 const switchNavigator = createSwitchNavigator({
@@ -78,15 +78,15 @@ const switchNavigator = createSwitchNavigator({
         }
       }),
     },
-    /*HomePage: {
+    HomePage: {
       screen: createStackNavigator({
-        HomePage: HomePage //
+        PhosDebugRoom: PhosDebugRoom //
       }, {
         defaultNavigationOptions: {
           headerShown: false
         }
       }),
-    },*/
+    },
   })
 
 });
