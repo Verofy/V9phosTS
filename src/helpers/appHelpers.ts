@@ -44,7 +44,7 @@ export async function initAndAuthenticate(issuer: string, token: string, license
     console.log('initializing...');
     return await PhosModule.initAndAuthenticate(issuer, token, license)
       .then((r: any) => {
-        console.log('Initialised and Authenticated', JSON.stringify(r));
+        Alert.alert('Initialised and Authenticated', JSON.stringify(r));
         return r;
       })
       .catch((err: any) => {
